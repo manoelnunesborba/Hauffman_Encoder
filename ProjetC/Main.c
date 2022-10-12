@@ -10,19 +10,46 @@ typedef enum { FALSE = 0, TRUE = 1 } Booleen;
 Booleen DebugOn = FALSE;
 
 typedef struct {
-	unsigned short int Key;
+	char Key;
     double frequency; 
+    int nbOfAppear; 
 
-}HashMap;
+}HashMap[5];
 
 void ReadInputString(String word){
     scanf("%s", word);
     if (DebugOn) printf(">>echo %s\n", word);
 }
+Booleen HashMapHasValue(int size, char value, HashMap* output){
+    for(int i =0; i<size; i++){
+        if(output[i]->Key == value)
+            return TRUE;
+        if(DebugOn)    printf("With. %u \n",output[i]->Key);
 
+    }
+    return FALSE;
+}
 void FrequencyFunction(int size, char* bytes, HashMap* output){
-for(int i = 0; i<size; i++)
-    printf("%u ", bytes[i]); // prints a series of bytes
+    output =  (HashMap*)malloc(size * sizeof(HashMap));
+    for(int i = 0; i<size; i++){
+        if(DebugOn)    printf("testing value... %u \n",bytes[i]);
+        
+        if(!HashMapHasValue(size, bytes[i], output)){
+            output[i]->Key=bytes[i];
+        }
+            output[i]->nbOfAppear = output[i]->nbOfAppear+1;
+            output[i]->frequency = output[i]->nbOfAppear / size;
+
+
+        
+    }
+    for(int i = 0; i<size; i++){
+        if(output[i]->Key != 0){
+        printf("For key %u, nbObAppear %d, frequency : %f \n", output[i]->Key,output[i]->nbOfAppear, output[i]->frequency );
+
+        }
+    }
+    
 }
 int main() {
     String buffer;
@@ -33,13 +60,11 @@ int main() {
     printf("Hauffman encoder !\n");
     printf("Enter file name: ");
     ReadInputString(buffer);
-    printf("Value entered : %s", buffer);
     while(access(buffer, F_OK) != 0)
     {
         printf("\n File entered was not valid, try another :");
         ReadInputString(buffer);
     };
-    printf("\nValue entered was valid");
     if (fopen(buffer,"rb") != NULL) {
         FILE* readFile_ptr= fopen(buffer,"rb");
         fseek(readFile_ptr, 0L, SEEK_END); 
