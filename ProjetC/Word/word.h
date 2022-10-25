@@ -12,16 +12,16 @@ struct LinkedListWord {
     LinkedListWord *next;
 };
 
-typedef struct Start Start;
-struct Start {
+typedef struct LinkedListRoot LinkedListRoot;
+struct LinkedListRoot {
     LinkedListWord * start;
 };
 
-Start * createStart();
+LinkedListRoot * createRoot();
 void incrementFrequency(LinkedListWord * list, char letter);
 void addElement(LinkedListWord * list, char letter);
 int alrdyAdded(LinkedListWord * list, char letter);
 void findLetterFrequency(LinkedListWord * list, char * word);
 void sortLinkedListWord(LinkedListWord * list);
-
+void addStack(LinkedListWord * list, int value);
 #endif //TEST5_WORD_H
