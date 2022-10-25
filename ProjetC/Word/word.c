@@ -3,6 +3,7 @@
 //
 
 #include "word.h"
+
 #include <stdlib.h>
 
 LinkedListRoot * createRoot(){
