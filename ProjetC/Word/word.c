@@ -2,7 +2,7 @@
 // Stolen by manoel jacqu on 21/10/2022.
 //
 
-#include "word/word.h"
+#include "word.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
