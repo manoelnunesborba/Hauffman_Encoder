@@ -60,11 +60,7 @@ int main() {
 
         findLetterFrequency(start->start, fileBytes);
         sortLinkedListWord(start->start);
-        /*fseek(readFilePtr, 0L, SEEK_END); 
-        fileBytes =(char*)malloc(res * sizeof( char));
-        fseek(readFilePtr, 0L, SEEK_SET);
-        fread(fileBytes,res,1,readFilePtr); 
-        frequencyFunction(res,fileBytes, &bufferMap);*/
+        //Next code goes hire
         printf("\n");
 
     }else{
