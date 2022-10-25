@@ -18,6 +18,7 @@ struct Start {
 };
 
 Start * createStart();
+void addStatic(LinkedListWord *list, char letter, double frequence);
 void incrementFrequency(LinkedListWord * list, char letter);
 void addElement(LinkedListWord * list, char letter);
 int alrdyAdded(LinkedListWord * list, char letter);

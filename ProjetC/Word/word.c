@@ -18,6 +18,34 @@ Start * createStart(){
     return start;
 }
 
+Start * createStaticStart(){
+    Start * start = malloc(sizeof(start));
+    start->start = NULL;
+    LinkedListWord * element = malloc(sizeof(LinkedListWord));
+    element->next = NULL;
+    element->letter = NULL;
+    element->frequency = NULL;
+    start->start = element;
+    double frequence[] = {8.13, 0.93, 3.15, 3.55, 15.10, 0.96, 0.97, 1.08, 6.94, 0.71, 0.16, 5.68, 3.23, 6.42, 5.27, 3.03, 0.89, 6.43, 7.91, 7.11,6.05, 1.83, 0.04, 0.42, 0.19, 0.21 };
+    for(char i = 97; i< 122; i++){
+        addStatic(start->start, i, frequence[i]);
+    }
+    
+    return start;
+} 
+void addStatic(LinkedListWord *list, char letter, double frequence){
+    if(list->letter != letter){
+        if(list->next == NULL && list->letter == NULL && list->frequency == NULL){
+            list->frequency = frequence;
+            list->letter = letter;
+        }else {
+            addStatic(list->next, letter, frequence);
+
+        }
+    }
+    
+}
+
 void addElement(LinkedListWord *list, char letter){
     if(list->next == NULL && list->letter == NULL && list->frequency == NULL){
         list->frequency = 1;
