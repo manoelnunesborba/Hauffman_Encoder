@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "Word/word.h"
+//#include "Word/word.h"
 // code style:
 // Variable and function as camelCase:
 // ex : firstName lastName hello thisIsQuiteGood
@@ -13,33 +13,25 @@
 typedef char String[MAX_PATH];
 typedef enum { false = 0, true = 1 } Booleen;
 Booleen debugOn = false;
+typedef struct LinkedListWord LinkedListWord;
+struct LinkedListWord {
+    char letter;
+    double frequency;
+    LinkedListWord *next;
+};
 
-typedef struct {
-	char key;
-    int frequency; 
+typedef struct Start Start;
+struct Start {
+    LinkedListWord * start;
+};
 
-}HashMap[5];
 
-void readInputString(String word){
-    scanf("%s", word);
-    if (debugOn) printf(">>echo %s\n", word);
-}
-Booleen hashMapHasValue(int size, char value, HashMap* output){
-    for(int i =0; i<size; i++){
-        if(output[i]->key == value)
-            return true;
-        if(debugOn)    printf("With. %u \n",output[i]->key);
-
-    }
-    return false;
-}
 
 int main() {
     String buffer;
     FILE *readFilePtr;
     int fileSize;
     char* fileBytes = NULL;
-    HashMap bufferMap;
     printf("Hauffman encoder !\n");
     printf("Enter file name: ");
     readInputString(buffer);
@@ -49,18 +41,17 @@ int main() {
         readInputString(buffer);
     };
 
-    if (fopen(buffer,"rb") != NULL) {
+    if (fopen(buffer,"rb") != -1) {
+        //setvbuf(stdout, NULL, _IONBF, 0);
+        printf("Yo");
         FILE* readFilePtr= fopen(buffer,"rb");
-        Start * start = createStart();
+        printf("YO");
+        Start * start = createStaticStart();
         fseek(readFilePtr, 0L, SEEK_END); 
         const long int res = ftell(readFilePtr); 
         fileBytes =(char*)malloc(res * sizeof( char));
         fseek(readFilePtr, 0L, SEEK_SET);
         fread(fileBytes,res,1,readFilePtr); 
-
-        findLetterFrequency(start->start, fileBytes);
-        sortLinkedListWord(start->start);
-        //Next code goes hire
         printf("\n");
 
     }else{
