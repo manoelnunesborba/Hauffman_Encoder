@@ -12,6 +12,7 @@
 
 #define MAX_PATH 300
 #define MAX_WORD_LENGTH 100
+#define LINE_LENGTH 100
 typedef char String[MAX_PATH];
 typedef enum { false = 0, true = 1 } Booleen;
 Booleen debugOn = false;
@@ -36,20 +37,29 @@ void displayDocumentation();
 char * displayInterface();
 void commandReader(int argc, char *argv[]);
 
+void openFile(String path, FILE ** file);
+void closeFile(FILE ** file);
+void readFile(FILE * file, LinkedListRoot * linkedListRoot);
+
 int main(int argc, char *argv[]) {
 
-    char testWord[MAX_WORD_LENGTH] = "bcaadddccacacac";
-    //char testWord2[MAX_WORD_LENGTH] = "AAABBBCCCO POKPOKPOKAAADADADDDDD \n AAABBBCCCO POKPOKPOKAAADADADDDDD";
+    char testWord[MAX_WORD_LENGTH] = "bcaadddccacacac efdmedfmspfd";
+    char testWord2[MAX_WORD_LENGTH] = "AAABBBCCCO POKPOKPOKAAADADADDDDD \n AAABBBCCCO POKPOKPOKAAADADADDDDD";
 
     // Creation table des frequence
 
     LinkedListRoot * linkedListRoot = createRoot();
-    findLetterFrequency(linkedListRoot->start, testWord);
-    sortLinkedListWord(linkedListRoot->start);
-
+    /*findLetterFrequency(linkedListRoot->start, testWord2);
+    sortLinkedListWord(linkedListRoot->start);*/
+    FILE *readFilePtr;
+    String path = "C:\\Users\\jacqu\\Desktop\\ESIEA\\Projet C\\Hauffman_Encoder\\ProjetC\\hard_test.txt";
+    openFile(path, &readFilePtr);
+    readFile(readFilePtr, linkedListRoot);
+    closeFile(&readFilePtr);
     // Creation arbre de huffman
     HuffmanRoot * Huffmanroot = createHuffmanRoot();
     createHuffmanTree(linkedListRoot, Huffmanroot);
+
 
     /*String buffer;
     FILE *readFilePtr;
@@ -91,6 +101,25 @@ int main(int argc, char *argv[]) {
 
     return 0;
 
+}
+
+void openFile(String path, FILE ** file) {
+    *file = fopen(path, "r");
+    if (*file == NULL) {
+        printf("Error opening file %s", path);
+        exit(1);
+    }
+}
+
+void closeFile(FILE ** file) {
+    fclose(*file);
+}
+
+void readFile(FILE * file, LinkedListRoot * linkedListRoot) {
+    char * c = malloc(sizeof(char));
+    while((c = fgetc(file)) != EOF) {
+        findLetterFrequency(linkedListRoot->start, &c);
+    }
 }
 
 void commandReader(int argc, char *argv[]) {
@@ -220,7 +249,7 @@ void initHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root) {
     HuffmanLeaf * leafLeft = NULL;
     HuffmanLeaf * leafRight = NULL;
 
-    if(listWord->frequency < listWord->next->frequency) {
+    if(listWord->frequency <= listWord->next->frequency) {
         leafLeft = createHuffmanLeaf(listWord->letter, listWord->frequency);
         leafRight = createHuffmanLeaf(listWord->next->letter, listWord->next->frequency);
     } else {
@@ -229,7 +258,7 @@ void initHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root) {
     }
     addLeaves(root->Root, leafLeft, leafRight);
     linkedListRoot->start = linkedListRoot->start->next->next;
-    addStack(linkedListRoot->start, root->Root->Frequency);
+    /*addStack(linkedListRoot->start, root->Root->Frequency);*/
 }
 
 void createHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root) {
@@ -249,7 +278,7 @@ void createBranch(LinkedListRoot * listWordRoot, HuffmanRoot * root) {
     int nextLetterFrequency = listWord->letter == NULL ? listWord->next->frequency : listWord->frequency;
     char nextLetter = listWord->letter == NULL ? listWord->next->letter : listWord->letter;
     HuffmanLeaf * newParent = createHuffmanLeaf(' ', 0);
-    if(nextLetterFrequency < root->Root->Frequency) {
+    if(nextLetterFrequency <= root->Root->Frequency) {
         HuffmanLeaf * left = createHuffmanLeaf(nextLetter, nextLetterFrequency);
         HuffmanLeaf * right = root->Root;
         addLeaves(newParent,left,right);
@@ -259,11 +288,15 @@ void createBranch(LinkedListRoot * listWordRoot, HuffmanRoot * root) {
         addLeaves(newParent,left,right);
     }
     root->Root = newParent;
-    if(isNULL(listWord->letter) && isNULL(listWord->next->next->next))
-        listWordRoot->start = listWordRoot->start->next->next->next;
-    listWordRoot->start = listWordRoot->start->next->next;
-    if(listWordRoot->start == NULL)
+    /*if(isNULL(listWord->letter) && isNULL(listWord->next->next->next))
+        listWordRoot->start = listWordRoot->start->next->next->next;*/
+    if(isNULL(listWordRoot->start->next) || isNULL(listWordRoot->start)) {
+        listWordRoot->start = NULL;
         return;
-    addStack(listWordRoot->start,root->Root->Frequency);
-    sortLinkedListWord(listWordRoot->start);
+    }
+    listWordRoot->start = listWordRoot->start->next;
+    /*if(listWordRoot->start == NULL)
+        return;*/
+    /*addStack(listWordRoot->start,root->Root->Frequency);
+    sortLinkedListWord(listWordRoot->start);*/
 }
