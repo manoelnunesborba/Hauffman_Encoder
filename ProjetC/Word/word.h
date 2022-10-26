@@ -17,7 +17,8 @@ struct LinkedListRoot {
     LinkedListWord * start;
 };
 
-LinkedListRoot * createRoot();
+Start * createStart();
+Start * createStaticStart();
 void incrementFrequency(LinkedListWord * list, char letter);
 void addElement(LinkedListWord * list, char letter);
 int alrdyAdded(LinkedListWord * list, char letter);
