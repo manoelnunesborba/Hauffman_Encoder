@@ -15,12 +15,19 @@
 typedef char String[MAX_PATH];
 typedef enum { false = 0, true = 1 } Booleen;
 Booleen debugOn = false;
+typedef struct LinkedListWord LinkedListWord;
+struct LinkedListWord {
+    char letter;
+    double frequency;
+    LinkedListWord *next;
+};
 
-typedef struct {
-	char key;
-    int frequency; 
+typedef struct Start Start;
+struct Start {
+    LinkedListWord * start;
+};
 
-}HashMap[5];
+
 
 void readInputString(String word);
 
@@ -55,7 +62,6 @@ int main(int argc, char *argv[]) {
     FILE *readFilePtr;
     int fileSize;
     char* fileBytes = NULL;
-    HashMap bufferMap;
     printf("Hauffman encoder !\n");
     printf("Enter file name: ");
     readInputString(buffer);
@@ -65,7 +71,9 @@ int main(int argc, char *argv[]) {
         readInputString(buffer);
     };
 
-    if (fopen(buffer,"rb") != NULL) {
+    if (fopen(buffer,"rb") != -1) {
+        //setvbuf(stdout, NULL, _IONBF, 0);
+        printf("Yo");
         FILE* readFilePtr= fopen(buffer,"rb");
         LinkedListRoot * start = createRoot();
         fseek(readFilePtr, 0L, SEEK_END); 
@@ -73,6 +81,7 @@ int main(int argc, char *argv[]) {
         fileBytes =(char*)malloc(res * sizeof( char));
         fseek(readFilePtr, 0L, SEEK_SET);
         fread(fileBytes,res,1,readFilePtr); 
+
 
         findLetterFrequency(start->start, fileBytes);
         sortLinkedListWord(start->start);
@@ -90,6 +99,7 @@ int main(int argc, char *argv[]) {
     }*/
 
     return 0;
+
 
 }
 
@@ -267,3 +277,4 @@ void createBranch(LinkedListRoot * listWordRoot, HuffmanRoot * root) {
     addStack(listWordRoot->start,root->Root->Frequency);
     sortLinkedListWord(listWordRoot->start);
 }
+
