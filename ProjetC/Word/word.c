@@ -3,19 +3,18 @@
 //
 
 #include "word.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-Start * createStart(){
-    Start * start = malloc(sizeof(start));
-    start->start = NULL;
+#include <stdlib.h>
+
+LinkedListRoot * createRoot(){
+    LinkedListRoot * root = malloc(sizeof(root));
+    root->start = NULL;
     LinkedListWord * element = malloc(sizeof(LinkedListWord));
     element->next = NULL;
     element->letter = NULL;
     element->frequency = NULL;
-    start->start = element;
-    return start;
+    root->start = element;
+    return root;
 }
 
 Start * createStaticStart(){
@@ -78,9 +77,8 @@ int alrdyAdded(LinkedListWord * list, char letter){
 }
 
 void findLetterFrequency(LinkedListWord * list, char * word){
-    for(int i = 0 ; word[i] != '\0' ; i++)
-        if((word[i] >= 'a' && word[i] <= 'z') || word[i] >= 'A' && word[i] <= 'Z')
-            incrementFrequency(list, word[i]);
+    for(int i = 0 ; word[i] != '\000' ; i++)
+        incrementFrequency(list, word[i]);
 }
 
 void sortLinkedListWord(LinkedListWord * word){
@@ -107,4 +105,14 @@ void sortLinkedListWord(LinkedListWord * word){
             current = current->next;
         } while (current->next != NULL);
     }
+}
+
+void addStack(LinkedListWord * list, int value) {
+    if(list == NULL)
+        return;
+    LinkedListWord * newWord = malloc(sizeof(LinkedListWord));
+    newWord->frequency = value;
+    newWord->letter = NULL;
+    newWord->next = list->next;
+    list->next = newWord;
 }

@@ -9,3 +9,6 @@
 /.vscode
 /.vscode-server
 /main
+/.idea
+/CMakeLists.txt
+cmake-build-debug
