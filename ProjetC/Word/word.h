@@ -16,6 +16,12 @@ typedef struct LinkedListRoot LinkedListRoot;
 struct LinkedListRoot {
     LinkedListWord * start;
 };
+typedef struct Start Start;
+
+struct Start {
+    LinkedListWord * start;
+};
+
 
 Start * createStart();
 Start * createStaticStart();
