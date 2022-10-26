@@ -16,7 +16,20 @@ LinkedListRoot * createRoot(){
     root->start = element;
     return root;
 }
+void addStatic(LinkedListWord *list, char letter, double frequence){
+    if(list->letter != letter){
+        if(list->next == NULL && list->letter == NULL){
+            list->frequency = frequence;
+            list->letter = letter;
+            LinkedListWord * newElement = malloc(sizeof(LinkedListWord));
+            newElement->next = NULL;
+            list->next = newElement;
+        }else {
+            addStatic(list->next, letter, frequence);
+        }
+    }
 
+}
 Start * createStaticStart(){
     Start * start = malloc(sizeof(start));
     start->start = NULL;
@@ -32,20 +45,7 @@ Start * createStaticStart(){
     
     return start;
 } 
-void addStatic(LinkedListWord *list, char letter, double frequence){
-    if(list->letter != letter){
-        if(list->next == NULL && list->letter == NULL){
-            list->frequency = frequence;
-            list->letter = letter;
-            LinkedListWord * newElement = malloc(sizeof(LinkedListWord));
-            newElement->next = NULL;
-            list->next = newElement;
-        }else {
-            addStatic(list->next, letter, frequence);
-        }
-    }
-    
-}
+
 void addElement(LinkedListWord *list, char letter){
     if(list->next == NULL && list->letter == NULL && list->frequency == NULL){
         list->frequency = 1;
