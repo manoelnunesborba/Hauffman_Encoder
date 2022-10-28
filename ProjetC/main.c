@@ -50,9 +50,9 @@ int main(int argc, char *argv[]) {
 
     // Creation table des frequence
 
-    LinkedListRoot * linkedListRoot = createRoot();
-    /*findLetterFrequency(linkedListRoot->start, testWord2);
-    sortLinkedListWord(linkedListRoot->start);*/
+    /*LinkedListRoot * linkedListRoot = createRoot();
+    *//*findLetterFrequency(linkedListRoot->start, testWord2);
+    sortLinkedListWord(linkedListRoot->start);*//*
     FILE *readFilePtr;
     String path = ABSOLUT_PATH;
     openFile(path, &readFilePtr);
@@ -60,8 +60,9 @@ int main(int argc, char *argv[]) {
     closeFile(&readFilePtr);
     // Creation arbre de huffman
     HuffmanRoot * Huffmanroot = createHuffmanRoot();
-    createHuffmanTree(linkedListRoot, Huffmanroot);
+    createHuffmanTree(linkedListRoot, Huffmanroot);*/
 
+    commandReader(argc, argv);
 
     /*String buffer;
     FILE *readFilePtr;
@@ -111,6 +112,7 @@ void openFile(String path, FILE ** file) {
         printf("Error opening file %s", path);
         exit(1);
     }
+    printf("File %s opened successfully", path);
 }
 
 void closeFile(FILE ** file) {
@@ -126,6 +128,8 @@ void readFile(FILE * file, LinkedListRoot * linkedListRoot) {
 }
 
 void commandReader(int argc, char *argv[]) {
+    LinkedListRoot * linkedListRoot = createRoot();
+    HuffmanRoot * Huffmanroot = createHuffmanRoot();
     if(argc == 1){
         displayDocumentation();
         return;
@@ -135,6 +139,11 @@ void commandReader(int argc, char *argv[]) {
         fprintf(stderr, "Error : too much arguments\n");
     } else {
         if(strcmp(argv[1], "-f") == 0 || strcmp(argv[1], "--fast") == 0){
+            FILE *readFilePtr;
+            char * path = argv[2];
+            openFile(path, &readFilePtr);
+            readFile(readFilePtr, linkedListRoot);
+            closeFile(&readFilePtr);
             printf("Compression rapide du fichier %s vers %s\n", argv[2], argv[3]);
         } else if(strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "--slow") == 0){
             printf("Compression lente du fichier %s vers %s\n", argv[2], argv[3]);
