@@ -23,7 +23,7 @@ struct Start {
 };
 
 
-Start * createRoot();
+LinkedListRoot * createRoot();
 Start * createStaticStart();
 void incrementFrequency(LinkedListWord * list, char letter);
 void addElement(LinkedListWord * list, char letter);

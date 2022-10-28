@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include "Word/word.h"
 #include "Tree/huffman.h"
 // code style:
