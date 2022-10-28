@@ -16,8 +16,15 @@ typedef struct LinkedListRoot LinkedListRoot;
 struct LinkedListRoot {
     LinkedListWord * start;
 };
+typedef struct Start Start;
 
-LinkedListRoot * createRoot();
+struct Start {
+    LinkedListWord * start;
+};
+
+
+Start * createStart();
+Start * createStaticStart();
 void incrementFrequency(LinkedListWord * list, char letter);
 void addElement(LinkedListWord * list, char letter);
 int alrdyAdded(LinkedListWord * list, char letter);

@@ -19,21 +19,12 @@ typedef char String[MAX_PATH];
 typedef enum { false = 0, true = 1 } Booleen;
 Booleen debugOn = false;
 
-typedef struct {
-	char key;
-    int frequency; 
 
-}HashMap[5];
 
-void readInputString(String word);
-
-Booleen hashMapHasValue(int size, char value, HashMap* output);
-
-int isNULL(LinkedListWord * list);
-
-void createHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root);
-void createBranch(LinkedListRoot * listWord, HuffmanRoot * root);
-void initHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root);
+void readInputString(String word){
+    scanf("%s", word);
+    if (debugOn) printf(">>echo %s\n", word);
+}
 
 void displayDocumentation();
 char * displayInterface();
@@ -44,7 +35,6 @@ void closeFile(FILE ** file);
 void readFile(FILE * file, LinkedListRoot * linkedListRoot);
 
 int main(int argc, char *argv[]) {
-
     char testWord[MAX_WORD_LENGTH] = "bcaadddccacacac efdmedfmspfd";
     char testWord2[MAX_WORD_LENGTH] = "AAABBBCCCO POKPOKPOKAAADADADDDDD \n AAABBBCCCO POKPOKPOKAAADADADDDDD";
 
@@ -103,7 +93,6 @@ int main(int argc, char *argv[]) {
     }*/
 
     return 0;
-
 }
 
 void openFile(String path, FILE ** file) {
@@ -145,6 +134,7 @@ void commandReader(int argc, char *argv[]) {
             readFile(readFilePtr, linkedListRoot);
             closeFile(&readFilePtr);
             printf("Compression rapide du fichier %s vers %s\n", argv[2], argv[3]);
+
         } else if(strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "--slow") == 0){
             printf("Compression lente du fichier %s vers %s\n", argv[2], argv[3]);
         } else if(strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--decompress") == 0){
@@ -229,7 +219,6 @@ char * displayInterface(){
             break;
     }
 }
-
 
 void readInputString(String word){
     scanf("%s", word);
