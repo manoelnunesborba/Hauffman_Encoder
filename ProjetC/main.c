@@ -13,6 +13,8 @@
 #define MAX_PATH 300
 #define MAX_WORD_LENGTH 100
 #define LINE_LENGTH 100
+#define ABSOLUT_PATH "C:\\Users\\jacqu\\OneDrive\\Bureau\\ESIEA\\S1\\PASS INFO\\Hauffman_Encoder\\ProjetC\\hard_test.txt"
+
 typedef char String[MAX_PATH];
 typedef enum { false = 0, true = 1 } Booleen;
 Booleen debugOn = false;
@@ -52,7 +54,7 @@ int main(int argc, char *argv[]) {
     /*findLetterFrequency(linkedListRoot->start, testWord2);
     sortLinkedListWord(linkedListRoot->start);*/
     FILE *readFilePtr;
-    String path = "C:\\Users\\jacqu\\Desktop\\ESIEA\\Projet C\\Hauffman_Encoder\\ProjetC\\hard_test.txt";
+    String path = ABSOLUT_PATH;
     openFile(path, &readFilePtr);
     readFile(readFilePtr, linkedListRoot);
     closeFile(&readFilePtr);
@@ -120,6 +122,7 @@ void readFile(FILE * file, LinkedListRoot * linkedListRoot) {
     while((c = fgetc(file)) != EOF) {
         findLetterFrequency(linkedListRoot->start, &c);
     }
+    sortLinkedListWord(linkedListRoot->start);
 }
 
 void commandReader(int argc, char *argv[]) {
@@ -271,12 +274,11 @@ void createHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root) {
 }
 
 void createBranch(LinkedListRoot * listWordRoot, HuffmanRoot * root) {
-    LinkedListWord * listWord = listWordRoot->start;
-    if(isNULL(listWord) || isNULL(listWord->next)) {
-        listWord == NULL;
-    }
-    int nextLetterFrequency = listWord->letter == NULL ? listWord->next->frequency : listWord->frequency;
-    char nextLetter = listWord->letter == NULL ? listWord->next->letter : listWord->letter;
+    /*if(isNULL(listWordRoot->start) || isNULL(listWordRoot->start->next)) {
+        listWordRoot == NULL;
+    }*/
+    int nextLetterFrequency = listWordRoot->start->letter == NULL ? listWordRoot->start->next->frequency : listWordRoot->start->frequency;
+    char nextLetter = listWordRoot->start->letter == NULL ? listWordRoot->start->next->letter : listWordRoot->start->letter;
     HuffmanLeaf * newParent = createHuffmanLeaf(' ', 0);
     if(nextLetterFrequency <= root->Root->Frequency) {
         HuffmanLeaf * left = createHuffmanLeaf(nextLetter, nextLetterFrequency);
@@ -288,7 +290,7 @@ void createBranch(LinkedListRoot * listWordRoot, HuffmanRoot * root) {
         addLeaves(newParent,left,right);
     }
     root->Root = newParent;
-    /*if(isNULL(listWord->letter) && isNULL(listWord->next->next->next))
+    /*if(isNULL(listWordRoot->letter) && isNULL(listWordRoot->next->next->next))
         listWordRoot->start = listWordRoot->start->next->next->next;*/
     if(isNULL(listWordRoot->start->next) || isNULL(listWordRoot->start)) {
         listWordRoot->start = NULL;
