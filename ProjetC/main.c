@@ -19,12 +19,16 @@ typedef char String[MAX_PATH];
 typedef enum { false = 0, true = 1 } Booleen;
 Booleen debugOn = false;
 
-
-
 void readInputString(String word){
     scanf("%s", word);
     if (debugOn) printf(">>echo %s\n", word);
 }
+
+int isNULL(LinkedListWord * list);
+
+void createHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root);
+void createBranch(LinkedListRoot * listWord, HuffmanRoot * root);
+void initHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root);
 
 void displayDocumentation();
 char * displayInterface();
@@ -33,6 +37,8 @@ void commandReader(int argc, char *argv[]);
 void openFile(String path, FILE ** file);
 void closeFile(FILE ** file);
 void readFile(FILE * file, LinkedListRoot * linkedListRoot);
+
+
 
 int main(int argc, char *argv[]) {
     char testWord[MAX_WORD_LENGTH] = "bcaadddccacacac efdmedfmspfd";
@@ -220,12 +226,12 @@ char * displayInterface(){
     }
 }
 
-void readInputString(String word){
+/*void readInputString(String word){
     scanf("%s", word);
     if (debugOn) printf(">>echo %s\n", word);
-}
+}*/
 
-Booleen hashMapHasValue(int size, char value, HashMap* output){
+/*Booleen hashMapHasValue(int size, char value, HashMap* output){
     for(int i =0; i<size; i++){
         if(output[i]->key == value)
             return true;
@@ -233,7 +239,7 @@ Booleen hashMapHasValue(int size, char value, HashMap* output){
 
     }
     return false;
-}
+}*/
 
 int isNULL(LinkedListWord * list) {
     return list == NULL ? 1 : 0;
