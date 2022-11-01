@@ -31,4 +31,5 @@ int alrdyAdded(LinkedListWord * list, char letter);
 void findLetterFrequency(LinkedListWord * list, char * word);
 void sortLinkedListWord(LinkedListWord * list);
 void addStack(LinkedListWord * list, int value);
+Start * createStaticStart();
 #endif //TEST5_WORD_H
