@@ -12,7 +12,7 @@
 #define MAX_PATH 300
 #define MAX_WORD_LENGTH 100
 #define LINE_LENGTH 100
-#define ABSOLUT_PATH "C:\\Users\\jacqu\\OneDrive\\Bureau\\ESIEA\\S1\\PASS INFO\\Hauffman_Encoder\\ProjetC\\hard_test.txt"
+#define ABSOLUT_PATH "<YOUR ABSLUT FILE PATH>"
 
 typedef char String[MAX_PATH];
 typedef enum { false = 0, true = 1 } Booleen;
@@ -42,66 +42,12 @@ void readFile(FILE * file, LinkedListRoot * linkedListRoot);
 int main(int argc, char *argv[]) {
     char testWord[MAX_WORD_LENGTH] = "bcaadddccacacac efdmedfmspfd";
     char testWord2[MAX_WORD_LENGTH] = "AAABBBCCCO POKPOKPOKAAADADADDDDD \n AAABBBCCCO POKPOKPOKAAADADADDDDD";
-
-    // Creation table des frequence
-
-    /*LinkedListRoot * linkedListRoot = createRoot();
-    *//*findLetterFrequency(linkedListRoot->start, testWord2);
-    sortLinkedListWord(linkedListRoot->start);*//*
-    FILE *readFilePtr;
-    String path = ABSOLUT_PATH;
-    openFile(path, &readFilePtr);
-    readFile(readFilePtr, linkedListRoot);
-    closeFile(&readFilePtr);
-    // Creation arbre de huffman
-    HuffmanRoot * Huffmanroot = createHuffmanRoot();
-    createHuffmanTree(linkedListRoot, Huffmanroot);*/
-
     commandReader(argc, argv);
-
-    /*String buffer;
-    FILE *readFilePtr;
-    int fileSize;
-    char* fileBytes = NULL;
-    HashMap bufferMap;
-    printf("Hauffman encoder !\n");
-    printf("Enter file name: ");
-    readInputString(buffer);
-    while(access(buffer, F_OK) != 0)
-    {
-        printf("\n File entered was not valid, try another :");
-        readInputString(buffer);
-    };
-
-    if (fopen(buffer,"rb") != NULL) {
-        FILE* readFilePtr= fopen(buffer,"rb");
-        LinkedListRoot * start = createRoot();
-        fseek(readFilePtr, 0L, SEEK_END); 
-        const long int res = ftell(readFilePtr); 
-        fileBytes =(char*)malloc(res * sizeof( char));
-        fseek(readFilePtr, 0L, SEEK_SET);
-        fread(fileBytes,res,1,readFilePtr); 
-
-        findLetterFrequency(start->start, fileBytes);
-        sortLinkedListWord(start->start);
-        *//*fseek(readFilePtr, 0L, SEEK_END);
-        fileBytes =(char*)malloc(res * sizeof( char));
-        fseek(readFilePtr, 0L, SEEK_SET);
-        fread(fileBytes,res,1,readFilePtr); 
-        frequencyFunction(res,fileBytes, &bufferMap);*//*
-        //Next code goes hire
-        printf("\n");
-
-    }else{
-        printf("Error");
-        return 1;
-    }*/
-
     return 0;
 }
 
 void openFile(String path, FILE ** file) {
-    *file = fopen(path, "r");
+    *file = fopen(path, "rb");
     if (*file == NULL) {
         printf("Error opening file %s", path);
         exit(1);
@@ -142,6 +88,8 @@ void commandReader(int argc, char *argv[]) {
 
         } else if(strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "--slow") == 0){
             printf("Compression lente du fichier %s vers %s\n", argv[2], argv[3]);
+            printf("Compression lente du fichier %s vers %s\n", argv[2], argv[3]);
+
         } else if(strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--decompress") == 0){
             printf("Décompression du fichier %s vers %s\n", argv[2], argv[3]);
         } else if(strcmp(argv[1], "-i") == 0 || strcmp(argv[1], "--interactive") == 0){
