@@ -6,13 +6,13 @@
 
 #include <stdlib.h>
 
-LinkedListRoot * createRoot(){
+LinkedListRoot * createDynammicRoot(){
     LinkedListRoot * root = malloc(sizeof(root));
     root->start = NULL;
     LinkedListWord * element = malloc(sizeof(LinkedListWord));
     element->next = NULL;
     element->letter = NULL;
-    element->frequency = NULL;
+    element->frequency = 0;
     root->start = element;
     return root;
 }
@@ -23,6 +23,7 @@ void addStatic(LinkedListWord *list, char letter, double frequence){
             list->letter = letter;
             LinkedListWord * newElement = malloc(sizeof(LinkedListWord));
             newElement->next = NULL;
+            newElement->letter = NULL;
             list->next = newElement;
         }else {
             addStatic(list->next, letter, frequence);
@@ -30,8 +31,8 @@ void addStatic(LinkedListWord *list, char letter, double frequence){
     }
 
 }
-Start * createStaticStart(){
-    Start * start = malloc(sizeof(start));
+LinkedListRoot * createStaticRoot(){
+    LinkedListRoot * start = malloc(sizeof(start));
     start->start = NULL;
     LinkedListWord * element = malloc(sizeof(LinkedListWord));
     element->next = NULL;
@@ -47,7 +48,7 @@ Start * createStaticStart(){
 } 
 
 void addElement(LinkedListWord *list, char letter){
-    if(list->next == NULL && list->letter == NULL && list->frequency == NULL){
+    if(list->next == NULL && list->letter == NULL){
         list->frequency = 1;
         list->letter = letter;
     } else {
@@ -67,7 +68,12 @@ void incrementFrequency(LinkedListWord *list, char letter){
     else
         addElement(list,letter);
 }
-
+void standardizedFrequency(LinkedListWord *list, int size){
+    list->frequency = list->frequency/size;
+    if(list->next != NULL){
+        standardizedFrequency(list->next,size);
+    }
+}
 int alrdyAdded(LinkedListWord * list, char letter){
     if(list->letter == letter)
         return 1;
@@ -85,7 +91,7 @@ void sortLinkedListWord(LinkedListWord * word){
     LinkedListWord * current = word;
     LinkedListWord * index = NULL;
     char temp;
-    int temp2;
+    double temp2;
     if(word == NULL)
         return;
     else {
