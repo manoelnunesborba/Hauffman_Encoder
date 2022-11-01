@@ -8,7 +8,7 @@
 typedef struct LinkedListWord LinkedListWord;
 struct LinkedListWord {
     char letter;
-    int frequency;
+    double frequency;
     LinkedListWord *next;
 };
 
