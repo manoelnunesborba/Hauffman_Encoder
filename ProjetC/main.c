@@ -61,14 +61,18 @@ void closeFile(FILE ** file) {
 
 void readFile(FILE * file, LinkedListRoot * linkedListRoot) {
     char * c = malloc(sizeof(char));
+    int size =0;
+
     while((c = fgetc(file)) != EOF) {
         findLetterFrequency(linkedListRoot->start, &c);
+        size++;
     }
+    standardizedFrequency(linkedListRoot->start,size);
     sortLinkedListWord(linkedListRoot->start);
 }
 
 void commandReader(int argc, char *argv[]) {
-    LinkedListRoot * linkedListRoot = createRoot();
+    LinkedListRoot * linkedListRoot;
     HuffmanRoot * Huffmanroot = createHuffmanRoot();
     if(argc == 1){
         displayDocumentation();
@@ -79,21 +83,31 @@ void commandReader(int argc, char *argv[]) {
         fprintf(stderr, "Error : too much arguments\n");
     } else {
         if(strcmp(argv[1], "-f") == 0 || strcmp(argv[1], "--fast") == 0){
+
+            linkedListRoot = createStaticRoot(); //Fast encoding uses static tree
+            sortLinkedListWord(linkedListRoot->start);
+            printf("Fast encoding from file: %s to %s\n", argv[2], argv[3]);
+
+            //Lucas ici t'as l'alphabet avec les fréquences triée ! Tu dois créer ton arbre de compression à partir de ça <3
+
+            // Dans la variable linkedListRoot
+
+        } else if(strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "--slow") == 0){
+            linkedListRoot =  createDynammicRoot();
             FILE *readFilePtr;
             char * path = argv[2];
             openFile(path, &readFilePtr);
             readFile(readFilePtr, linkedListRoot);
             closeFile(&readFilePtr);
-            printf("Compression rapide du fichier %s vers %s\n", argv[2], argv[3]);
+            printf("Slow encoding from file: %s to %s\n", argv[2], argv[3]);
+            //Lucas ici t'as le texte avec les fréquences triée ! Tu dois créer ton arbre de compression à partir de ça <3
 
-        } else if(strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "--slow") == 0){
-            printf("Compression lente du fichier %s vers %s\n", argv[2], argv[3]);
-            printf("Compression lente du fichier %s vers %s\n", argv[2], argv[3]);
+            // Dans la variable linkedListRoot
 
         } else if(strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--decompress") == 0){
-            printf("Décompression du fichier %s vers %s\n", argv[2], argv[3]);
+            printf("Decoding from file: %s to %s\n", argv[2], argv[3]);
         } else if(strcmp(argv[1], "-i") == 0 || strcmp(argv[1], "--interactive") == 0){
-            printf("Interface en mode interactif\n");
+            printf("Interactive mode\n");
             displayInterface();
         }
     }
