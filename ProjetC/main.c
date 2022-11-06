@@ -108,7 +108,7 @@ void commandReader(int argc, char *argv[]) {
             getSymbolsDepth(Huffmanroot->Root, canonicalList);
             assignCodes(canonicalList, uniqueChars, EXT_ASCII);
             FILE *outputFile;
-            if ((outputFile = fopen("output.bin", "wb")) == NULL) {
+            if ((outputFile = fopen(output, "wb")) == NULL) {
                 perror("couldn't open output file");
                 exit(EXIT_FAILURE);
             }
@@ -123,7 +123,7 @@ void commandReader(int argc, char *argv[]) {
             FILE *input;
             FILE *output;
             openFile(inputPath, &input);
-            if ((output = fopen("output.txt", "wb")) == NULL) {
+            if ((output = fopen(output, "wb")) == NULL) {
                 perror("couldn't open output file");
                 exit(EXIT_FAILURE);
             }

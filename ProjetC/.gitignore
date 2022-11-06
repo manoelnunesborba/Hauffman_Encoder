@@ -4,3 +4,6 @@ main
 .editorconfig
 output.bin
 output.txt
+header.bin
+huffman
+hcode
