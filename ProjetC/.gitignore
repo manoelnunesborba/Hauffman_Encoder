@@ -1,3 +1,6 @@
 .vscode
 main
 .gitignore
+.editorconfig
+output.bin
+output.txt

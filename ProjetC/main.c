@@ -3,6 +3,7 @@
 #include <string.h>
 #include "Word/word.h"
 #include "Tree/huffman.h"
+#include "Hufenc/hufenc.h"
 // code style:
 // Variable and function as camelCase:
 // ex : firstName lastName hello thisIsQuiteGood
@@ -13,7 +14,6 @@
 #define MAX_WORD_LENGTH 100
 #define LINE_LENGTH 100
 #define ABSOLUT_PATH "<YOUR ABSLUT FILE PATH>"
-
 typedef char String[MAX_PATH];
 typedef enum { false = 0, true = 1 } Booleen;
 Booleen debugOn = false;
@@ -35,13 +35,13 @@ void commandReader(int argc, char *argv[]);
 
 void openFile(String path, FILE ** file);
 void closeFile(FILE ** file);
-void readFile(FILE * file, LinkedListRoot * linkedListRoot);
+unsigned long readFile(FILE * file, LinkedListRoot * linkedListRoot);
 
 
 
 int main(int argc, char *argv[]) {
-    char testWord[MAX_WORD_LENGTH] = "bcaadddccacacac efdmedfmspfd";
-    char testWord2[MAX_WORD_LENGTH] = "AAABBBCCCO POKPOKPOKAAADADADDDDD \n AAABBBCCCO POKPOKPOKAAADADADDDDD";
+    // char testWord[MAX_WORD_LENGTH] = "bcaadddccacacac efdmedfmspfd";
+    // char testWord2[MAX_WORD_LENGTH] = "AAABBBCCCO POKPOKPOKAAADADADDDDD \n AAABBBCCCO POKPOKPOKAAADADADDDDD";
     commandReader(argc, argv);
     return 0;
 }
@@ -59,9 +59,9 @@ void closeFile(FILE ** file) {
     fclose(*file);
 }
 
-void readFile(FILE * file, LinkedListRoot * linkedListRoot) {
+unsigned long readFile(FILE * file, LinkedListRoot * linkedListRoot) {
     char * c = malloc(sizeof(char));
-    int size =0;
+    unsigned long size =0;
 
     while((c = fgetc(file)) != EOF) {
         findLetterFrequency(linkedListRoot->start, &c);
@@ -69,6 +69,7 @@ void readFile(FILE * file, LinkedListRoot * linkedListRoot) {
     }
     standardizedFrequency(linkedListRoot->start,size);
     sortLinkedListWord(linkedListRoot->start);
+    return size;
 }
 
 void commandReader(int argc, char *argv[]) {
@@ -89,23 +90,51 @@ void commandReader(int argc, char *argv[]) {
             printf("Fast encoding from file: %s to %s\n", argv[2], argv[3]);
 
             //Lucas ici t'as l'alphabet avec les fréquences triée ! Tu dois créer ton arbre de compression à partir de ça <3
-
+            
             // Dans la variable linkedListRoot
 
         } else if(strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "--slow") == 0){
             linkedListRoot =  createDynammicRoot();
             FILE *readFilePtr;
-            char * path = argv[2];
-            openFile(path, &readFilePtr);
-            readFile(readFilePtr, linkedListRoot);
-            closeFile(&readFilePtr);
-            printf("Slow encoding from file: %s to %s\n", argv[2], argv[3]);
-            //Lucas ici t'as le texte avec les fréquences triée ! Tu dois créer ton arbre de compression à partir de ça <3
+            char * input = argv[2];
+            char * output = argv[3];
+            openFile(input, &readFilePtr);
+            int characterAmmount = readFile(readFilePtr, linkedListRoot);
+            sortLinkedListWord(linkedListRoot->start);
+            char uniqueChars = getUniqueChars(*linkedListRoot);
+            HuffmanRoot * Huffmanroot = createHuffmanRoot();
+            createHuffmanTree(linkedListRoot, Huffmanroot);
+            CanonicalList canonicalList[EXT_ASCII];
+            getSymbolsDepth(Huffmanroot->Root, canonicalList);
+            assignCodes(canonicalList, uniqueChars, EXT_ASCII);
+            FILE *outputFile;
+            if ((outputFile = fopen("output.bin", "wb")) == NULL) {
+                perror("couldn't open output file");
+                exit(EXIT_FAILURE);
+            }
+            writeHeader(canonicalList, uniqueChars,characterAmmount, outputFile);
+            encode(canonicalList,readFilePtr, outputFile);
+            fclose(readFilePtr);
 
-            // Dans la variable linkedListRoot
 
         } else if(strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--decompress") == 0){
-            printf("Decoding from file: %s to %s\n", argv[2], argv[3]);
+            char * inputPath = argv[2];
+            char * outputPath = argv[3];
+            FILE *input;
+            FILE *output;
+            openFile(inputPath, &input);
+            if ((output = fopen("output.txt", "wb")) == NULL) {
+                perror("couldn't open output file");
+                exit(EXIT_FAILURE);
+            }
+            unsigned char uniqueChars;
+            unsigned long characterAmmount;
+            CanonicalList *CanonicalList = readHeader(input, &uniqueChars, &characterAmmount);
+            assignCodes(CanonicalList, uniqueChars, uniqueChars);
+            decode(CanonicalList, characterAmmount, uniqueChars, input, output);
+
+
+
         } else if(strcmp(argv[1], "-i") == 0 || strcmp(argv[1], "--interactive") == 0){
             printf("Interactive mode\n");
             displayInterface();
