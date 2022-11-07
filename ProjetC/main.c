@@ -28,7 +28,8 @@ int isNULL(LinkedListWord * list);
 void createHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root);
 void createBranch(LinkedListRoot * listWord, HuffmanRoot * root);
 void initHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root);
-
+void createParalleTree(HuffmanRoot * huffmanRoot, LinkedListRoot * linkedListRoot);
+void initializeHuffmanTree(HuffmanRoot * huffmanRoot, LinkedListRoot * linkedListRoot);
 void displayDocumentation();
 char * displayInterface();
 void commandReader(int argc, char *argv[]);
@@ -67,7 +68,7 @@ unsigned long readFile(FILE * file, LinkedListRoot * linkedListRoot) {
         findLetterFrequency(linkedListRoot->start, &c);
         size++;
     }
-    standardizedFrequency(linkedListRoot->start,size);
+    //standardizedFrequency(linkedListRoot->start,size);
     sortLinkedListWord(linkedListRoot->start);
     return size;
 }
@@ -258,13 +259,62 @@ void initHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root) {
     /*addStack(linkedListRoot->start, root->Root->Frequency);*/
 }
 
-void createHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root) {
+/*void createHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root) {
     if(root->Root == NULL){
         initHuffmanTree(linkedListRoot,root);
     }
     while(linkedListRoot->start != NULL ) {
         createBranch(linkedListRoot, root);
     }
+}*/
+
+void createHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * huffmanRoot) {
+    if(huffmanRoot->Root == NULL){
+        initializeHuffmanTree(huffmanRoot,linkedListRoot);
+    }
+    while(linkedListRoot->start != NULL ) {
+        if(linkedListRoot->start->frequency <= huffmanRoot->Root->Frequency) {
+            createParalleTree(huffmanRoot, linkedListRoot);
+        } else {
+            createBranch(linkedListRoot, huffmanRoot);
+        }
+    }
+}
+
+void initializeHuffmanTree(HuffmanRoot * huffmanRoot, LinkedListRoot * linkedListRoot) {
+    huffmanRoot->Root = createHuffmanLeaf(' ',0);
+
+    LinkedListWord * listWord = linkedListRoot->start;
+
+    if(isNULL(linkedListRoot->start) || isNULL(linkedListRoot->start->next))
+        return;
+
+    HuffmanLeaf * leafLeft = NULL;
+    HuffmanLeaf * leafRight = NULL;
+
+    if(listWord->frequency <= listWord->next->frequency) {
+        leafLeft = createHuffmanLeaf(listWord->letter, listWord->frequency);
+        leafRight = createHuffmanLeaf(listWord->next->letter, listWord->next->frequency);
+    } else {
+        leafLeft = createHuffmanLeaf(listWord->next->letter, listWord->next->frequency);
+        leafRight = createHuffmanLeaf(listWord->letter, listWord->frequency);
+    }
+    addLeaves(huffmanRoot->Root, leafLeft, leafRight);
+    linkedListRoot->start = linkedListRoot->start->next->next;
+}
+
+void createParalleTree(HuffmanRoot * huffmanRoot, LinkedListRoot * linkedListRoot) {
+    HuffmanRoot * ParallelTree = createHuffmanRoot();
+    initializeHuffmanTree(ParallelTree, linkedListRoot);
+    while(linkedListRoot->start != NULL) {
+        if(ParallelTree->Root->Frequency > huffmanRoot->Root->Frequency) {
+            break;
+        }
+        createBranch(linkedListRoot, ParallelTree);
+    }
+    HuffmanLeaf * jointureLeaf = createHuffmanLeaf(' ',0);
+    addLeaves(jointureLeaf,ParallelTree->Root,huffmanRoot->Root);
+    huffmanRoot->Root = jointureLeaf;
 }
 
 void createBranch(LinkedListRoot * listWordRoot, HuffmanRoot * root) {

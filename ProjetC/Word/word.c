@@ -5,6 +5,8 @@
 #include "word.h"
 
 #include <stdlib.h>
+#include <ctype.h>
+#include <stdio.h>
 
 LinkedListRoot * createDynammicRoot(){
     LinkedListRoot * root = malloc(sizeof(root));
@@ -61,6 +63,8 @@ void addElement(LinkedListWord *list, char letter){
 }
 
 void incrementFrequency(LinkedListWord *list, char letter){
+    if(letter == '\r')
+        return;
     if(list->letter == letter)
         list->frequency++;
     else if(list->next != NULL)
