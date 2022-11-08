@@ -274,7 +274,10 @@ void createHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * huffmanRoo
     }
     while(linkedListRoot->start != NULL ) {
         if(linkedListRoot->start->frequency <= huffmanRoot->Root->Frequency) {
-            createParalleTree(huffmanRoot, linkedListRoot);
+            if(isNULL(linkedListRoot->start->next))
+                createBranch(linkedListRoot, huffmanRoot);
+            else
+                createParalleTree(huffmanRoot, linkedListRoot);
         } else {
             createBranch(linkedListRoot, huffmanRoot);
         }
@@ -288,7 +291,7 @@ void initializeHuffmanTree(HuffmanRoot * huffmanRoot, LinkedListRoot * linkedLis
 
     if(isNULL(linkedListRoot->start) || isNULL(linkedListRoot->start->next))
         return;
-
+    
     HuffmanLeaf * leafLeft = NULL;
     HuffmanLeaf * leafRight = NULL;
 
