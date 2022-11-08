@@ -79,6 +79,7 @@ int assignCodes(CanonicalList *list, int uniqueChars, int size) {
         if (!firstOccurence) {
             list[i].code = code;
             firstOccurence = 1;
+            depth = list[i].depth;
             continue;
         }
         code ++;
