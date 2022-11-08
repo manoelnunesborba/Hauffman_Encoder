@@ -124,7 +124,7 @@ void commandReader(int argc, char *argv[]) {
             FILE *input;
             FILE *output;
             openFile(inputPath, &input);
-            if ((output = fopen(output, "wb")) == NULL) {
+            if ((output = fopen(outputPath, "wb")) == NULL) {
                 perror("couldn't open output file");
                 exit(EXIT_FAILURE);
             }

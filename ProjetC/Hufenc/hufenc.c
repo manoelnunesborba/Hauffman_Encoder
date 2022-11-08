@@ -177,7 +177,7 @@ int decode(CanonicalList *list, unsigned long characterAmmount, int uniqueChars,
                 int currentIndex;
                 for(;;){
                     currentIndex = searchIndex[length] + offset;
-                    if (list[currentIndex].depth > length) {
+                    if (list[currentIndex].depth > length || currentIndex  == uniqueChars) {
                         break;
                     }
                     if (code == list[currentIndex].code) {

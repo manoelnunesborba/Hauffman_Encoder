@@ -63,8 +63,6 @@ void addElement(LinkedListWord *list, char letter){
 }
 
 void incrementFrequency(LinkedListWord *list, char letter){
-    if(letter == '\r')
-        return;
     if(list->letter == letter)
         list->frequency++;
     else if(list->next != NULL)
