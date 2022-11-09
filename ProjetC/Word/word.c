@@ -5,6 +5,8 @@
 #include "word.h"
 
 #include <stdlib.h>
+#include <ctype.h>
+#include <stdio.h>
 
 LinkedListRoot * createDynammicRoot(){
     LinkedListRoot * root = malloc(sizeof(root));
