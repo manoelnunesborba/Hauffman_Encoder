@@ -217,21 +217,6 @@ char * displayInterface(){
     }
 }
 
-/*void readInputString(String word){
-    scanf("%s", word);
-    if (debugOn) printf(">>echo %s\n", word);
-}*/
-
-/*Booleen hashMapHasValue(int size, char value, HashMap* output){
-    for(int i =0; i<size; i++){
-        if(output[i]->key == value)
-            return true;
-        if(debugOn)    printf("With. %u \n",output[i]->key);
-
-    }
-    return false;
-}*/
-
 int isNULL(LinkedListWord * list) {
     return list == NULL ? 1 : 0;
 }
@@ -256,17 +241,7 @@ void initHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root) {
     }
     addLeaves(root->Root, leafLeft, leafRight);
     linkedListRoot->start = linkedListRoot->start->next->next;
-    /*addStack(linkedListRoot->start, root->Root->Frequency);*/
 }
-
-/*void createHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * root) {
-    if(root->Root == NULL){
-        initHuffmanTree(linkedListRoot,root);
-    }
-    while(linkedListRoot->start != NULL ) {
-        createBranch(linkedListRoot, root);
-    }
-}*/
 
 void createHuffmanTree(LinkedListRoot * linkedListRoot, HuffmanRoot * huffmanRoot) {
     if(huffmanRoot->Root == NULL){
@@ -321,9 +296,6 @@ void createParalleTree(HuffmanRoot * huffmanRoot, LinkedListRoot * linkedListRoo
 }
 
 void createBranch(LinkedListRoot * listWordRoot, HuffmanRoot * root) {
-    /*if(isNULL(listWordRoot->start) || isNULL(listWordRoot->start->next)) {
-        listWordRoot == NULL;
-    }*/
     int nextLetterFrequency = listWordRoot->start->letter == NULL ? listWordRoot->start->next->frequency : listWordRoot->start->frequency;
     char nextLetter = listWordRoot->start->letter == NULL ? listWordRoot->start->next->letter : listWordRoot->start->letter;
     HuffmanLeaf * newParent = createHuffmanLeaf(' ', 0);
@@ -337,15 +309,9 @@ void createBranch(LinkedListRoot * listWordRoot, HuffmanRoot * root) {
         addLeaves(newParent,left,right);
     }
     root->Root = newParent;
-    /*if(isNULL(listWordRoot->letter) && isNULL(listWordRoot->next->next->next))
-        listWordRoot->start = listWordRoot->start->next->next->next;*/
     if(isNULL(listWordRoot->start->next) || isNULL(listWordRoot->start)) {
         listWordRoot->start = NULL;
         return;
     }
     listWordRoot->start = listWordRoot->start->next;
-    /*if(listWordRoot->start == NULL)
-        return;*/
-    /*addStack(listWordRoot->start,root->Root->Frequency);
-    sortLinkedListWord(listWordRoot->start);*/
 }
