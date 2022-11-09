@@ -8,7 +8,7 @@
 
 
 #include "word.h"
-
+#include <stdio.h>
 #include <stdlib.h>
 
 LinkedListRoot * createDynammicRoot(){
@@ -50,7 +50,62 @@ LinkedListRoot * createStaticRoot(){
     }
     
     return start;
-} 
+}
+LinkedListRoot * ReadFileAndGenerateStruct(const char *FileName){
+    FILE* ptr;
+    char ch;
+    LinkedListRoot *root = createStaticRoot();
+    // Opening file in reading mode
+    ptr = fopen(FileName, "r");
+    if (NULL == ptr) {
+        printf("file can't be opened \n");
+    }
+    int indice =0;
+    int readNExtChar=1;
+    int readNExtFrequency=0;
+    char lettres[83];
+    do {
+        ch = fgetc(ptr);
+
+        if(readNExtChar == 1 ){
+            //add char
+            lettres[indice] = ch;
+        }
+        if(readNExtFrequency == 1 ){
+            //add frequency
+            double freq;
+            char tmp[9];
+            int cnt =0;
+            do{
+                int i =ch;
+                tmp[cnt]=ch;
+                cnt++;
+                ch = fgetc(ptr);
+                freq=atof(tmp);
+            }while(ch !=10 && ch != ' ');
+            addStatic(root->start,lettres[indice],freq);
+        }
+
+        if(ch == '\t'){
+            readNExtFrequency=1;
+        }else{
+            readNExtFrequency=0;
+        }
+        if(ch == 10){
+            readNExtChar =1;
+            indice++;
+        }else{
+            readNExtChar =0;
+        }
+        printf("%c", ch);
+
+        // Checking if character is not EOF.
+        // If it is EOF stop eading.
+    } while (ch != EOF);
+
+    // Closing the file
+    fclose(ptr);
+}
 
 void addElement(LinkedListWord *list, char letter){
     if(list->next == NULL && list->letter == NULL){

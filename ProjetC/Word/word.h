@@ -24,6 +24,7 @@ struct LinkedListRoot {
 
 void standardizedFrequency(LinkedListWord *list, int size);
 LinkedListRoot * createStaticRoot();
+LinkedListRoot * ReadFileAndGenerateStruct(const char *FileName);
 LinkedListRoot * createDynammicRoot();
 void incrementFrequency(LinkedListWord * list, char letter);
 void addElement(LinkedListWord * list, char letter);
