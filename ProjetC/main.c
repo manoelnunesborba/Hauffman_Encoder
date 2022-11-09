@@ -86,13 +86,28 @@ void commandReader(int argc, char *argv[]) {
     } else {
         if(strcmp(argv[1], "-f") == 0 || strcmp(argv[1], "--fast") == 0){
 
-            linkedListRoot = createStaticRoot(); //Fast encoding uses static tree
+            linkedListRoot = ReadFileAndGenerateStruct("C:\\Users\\Manoel\\Documents\\GitHub\\Hauffman_Encoder\\ProjetC\\StaticTrees\\alphabetfrancais.txt"); //Fast encoding uses static tree
             sortLinkedListWord(linkedListRoot->start);
-            printf("Fast encoding from file: %s to %s\n", argv[2], argv[3]);
-
-            //Lucas ici t'as l'alphabet avec les fréquences triée ! Tu dois créer ton arbre de compression à partir de ça <3
-            
-            // Dans la variable linkedListRoot
+            FILE *readFilePtr;
+            char * input = argv[2];
+            char * output = argv[3];
+            openFile(input, &readFilePtr);
+            int characterAmmount = readFile(readFilePtr, linkedListRoot);
+            sortLinkedListWord(linkedListRoot->start);
+            char uniqueChars = getUniqueChars(*linkedListRoot);
+            HuffmanRoot * Huffmanroot = createHuffmanRoot();
+            createHuffmanTree(linkedListRoot, Huffmanroot);
+            CanonicalList canonicalList[EXT_ASCII];
+            getSymbolsDepth(Huffmanroot->Root, canonicalList);
+            assignCodes(canonicalList, uniqueChars, EXT_ASCII);
+            FILE *outputFile;
+            if ((outputFile = fopen(output, "wb")) == NULL) {
+                perror("couldn't open output file");
+                exit(EXIT_FAILURE);
+            }
+            writeHeader(canonicalList, uniqueChars,characterAmmount, outputFile);
+            encode(canonicalList,readFilePtr, outputFile);
+            fclose(readFilePtr);
 
         } else if(strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "--slow") == 0){
             linkedListRoot =  createDynammicRoot();
