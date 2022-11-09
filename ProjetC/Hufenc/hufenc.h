@@ -1,3 +1,11 @@
+/**
+* Structure et prototype de compression et decrompression
+*
+* @author  Nunes Borba Manoel / Quitman Lucas / Mozet Jacques-Arno
+* @version 1.0
+* @since   2022-09-11
+*/
+
 #include <stdio.h>
 #define EXT_ASCII 256
 typedef unsigned __int128 BigInt;

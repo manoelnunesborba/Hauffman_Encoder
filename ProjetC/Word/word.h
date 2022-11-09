@@ -1,6 +1,11 @@
-//
-// Stolen by manoel on 21/10/2022.
-//
+/**
+* Structure et prototype de creation de la table de frequence
+*
+* @author  Nunes Borba Manoel / Quitman Lucas / Mozet Jacques-Arno
+* @version 1.0
+* @since   2022-09-11
+*/
+
 
 #ifndef TEST5_WORD_H
 #define TEST5_WORD_H
@@ -26,5 +31,4 @@ void addElement(LinkedListWord * list, char letter);
 int alrdyAdded(LinkedListWord * list, char letter);
 void findLetterFrequency(LinkedListWord * list, char * word);
 void sortLinkedListWord(LinkedListWord * list);
-void addStack(LinkedListWord * list, int value);
 #endif //TEST5_WORD_H
