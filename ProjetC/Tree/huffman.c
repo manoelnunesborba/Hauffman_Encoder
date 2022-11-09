@@ -1,6 +1,10 @@
-//
-// Created by jacqu on 25/10/2022.
-//
+/**
+* Fonction de creation de l'arbre de huffman
+*
+* @author  Nunes Borba Manoel / Quitman Lucas / Mozet Jacques-Arno
+* @version 1.0
+* @since   2022-09-11
+*/
 
 #include "huffman.h"
 #include <stdlib.h>

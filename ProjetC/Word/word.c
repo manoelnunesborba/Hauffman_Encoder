@@ -1,12 +1,15 @@
-//
-// Stolen by manoel jacqu on 21/10/2022.
-//
+/**
+* Fonction de creation de la table de frequence
+*
+* @author  Nunes Borba Manoel / Quitman Lucas / Mozet Jacques-Arno
+* @version 1.0
+* @since   2022-09-11
+*/
+
 
 #include "word.h"
 
 #include <stdlib.h>
-#include <ctype.h>
-#include <stdio.h>
 
 LinkedListRoot * createDynammicRoot(){
     LinkedListRoot * root = malloc(sizeof(root));
@@ -113,14 +116,4 @@ void sortLinkedListWord(LinkedListWord * word){
             current = current->next;
         } while (current->next != NULL);
     }
-}
-
-void addStack(LinkedListWord * list, int value) {
-    if(list == NULL)
-        return;
-    LinkedListWord * newWord = malloc(sizeof(LinkedListWord));
-    newWord->frequency = value;
-    newWord->letter = NULL;
-    newWord->next = list->next;
-    list->next = newWord;
 }

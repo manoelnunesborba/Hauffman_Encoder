@@ -1,3 +1,11 @@
+/**
+* Fonction de compression et decrompression
+*
+* @author  Nunes Borba Manoel / Quitman Lucas / Mozet Jacques-Arno
+* @version 1.0
+* @since   2022-09-11
+*/
+
 #include "../Tree/huffman.h"
 #include "../Word/word.h"
 #include "./hufenc.h"
