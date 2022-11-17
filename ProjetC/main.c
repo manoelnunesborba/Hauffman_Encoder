@@ -72,88 +72,92 @@ unsigned long readFile(FILE * file, LinkedListRoot * linkedListRoot) {
     sortLinkedListWord(linkedListRoot->start);
     return size;
 }
-
+void staticCompression(char * var_input, char * var_output){
+/*Juste ici, il faut changer car ca depend dans quel repertoire ton IDE torne*/
+    LinkedListRoot * linkedListRoot = ReadFileAndGenerateStruct("..\\ProjetC\\StaticTrees\\alphabetfrancais.txt"); //Fast encoding uses static tree
+    sortLinkedListWord(linkedListRoot->start);
+    FILE *readFilePtr;
+    char * input = var_input;
+    char * output = var_output;
+    openFile(input, &readFilePtr);
+    int characterAmmount = readFile(readFilePtr, linkedListRoot);
+    sortLinkedListWord(linkedListRoot->start);
+    char uniqueChars = getUniqueChars(*linkedListRoot);
+    HuffmanRoot * Huffmanroot = createHuffmanRoot();
+    createHuffmanTree(linkedListRoot, Huffmanroot);
+    CanonicalList canonicalList[EXT_ASCII];
+    getSymbolsDepth(Huffmanroot->Root, canonicalList);
+    assignCodes(canonicalList, uniqueChars, EXT_ASCII);
+    FILE *outputFile;
+    if ((outputFile = fopen(output, "wb")) == NULL) {
+        perror("couldn't open output file");
+        exit(EXIT_FAILURE);
+    }
+    writeHeader(canonicalList, uniqueChars,characterAmmount, outputFile);
+    encode(canonicalList,readFilePtr, outputFile);
+    fclose(readFilePtr);
+}
+void dynammicCompression(char * var_input, char * var_output){
+    LinkedListRoot *  linkedListRoot =  createDynammicRoot();
+    FILE *readFilePtr;
+    char * input = var_input;
+    char * output = var_output;
+    openFile(input, &readFilePtr);
+    int characterAmmount = readFile(readFilePtr, linkedListRoot);
+    sortLinkedListWord(linkedListRoot->start);
+    char uniqueChars = getUniqueChars(*linkedListRoot);
+    HuffmanRoot * Huffmanroot = createHuffmanRoot();
+    createHuffmanTree(linkedListRoot, Huffmanroot);
+    CanonicalList canonicalList[EXT_ASCII];
+    getSymbolsDepth(Huffmanroot->Root, canonicalList);
+    assignCodes(canonicalList, uniqueChars, EXT_ASCII);
+    FILE *outputFile;
+    if ((outputFile = fopen(output, "wb")) == NULL) {
+        perror("couldn't open output file");
+        exit(EXIT_FAILURE);
+    }
+    writeHeader(canonicalList, uniqueChars,characterAmmount, outputFile);
+    encode(canonicalList,readFilePtr, outputFile);
+    fclose(readFilePtr);
+}
+void decompress(char * var_input, char * var_output){
+    char * inputPath = var_input;
+    char * outputPath = var_output;
+    FILE *input;
+    FILE *output;
+    openFile(inputPath, &input);
+    if ((output = fopen(outputPath, "wb")) == NULL) {
+        perror("couldn't open output file");
+        exit(EXIT_FAILURE);
+    }
+    unsigned char uniqueChars;
+    unsigned long characterAmmount;
+    CanonicalList *CanonicalList = readHeader(input, &uniqueChars, &characterAmmount);
+    assignCodes(CanonicalList, uniqueChars, uniqueChars);
+    decode(CanonicalList, characterAmmount, uniqueChars, input, output);
+}
 void commandReader(int argc, char *argv[]) {
-    LinkedListRoot * linkedListRoot;
     HuffmanRoot * Huffmanroot = createHuffmanRoot();
     if(argc == 1){
         displayDocumentation();
         return;
     }else if(argc > 1 && argc <= 3) {
-        fprintf(stderr, "Error : not enough arguments\n");
+        if(strcmp(argv[1], "-i") == 0 || strcmp(argv[1], "--interactive") == 0){
+            printf("Interactive mode\n");
+            displayInterface();
+        }else{
+            fprintf(stderr, "Error : not enough arguments\n");
+        }
     } else if(argc > 4) {
         fprintf(stderr, "Error : too much arguments\n");
     } else {
         if(strcmp(argv[1], "-f") == 0 || strcmp(argv[1], "--fast") == 0){
-
-            linkedListRoot = ReadFileAndGenerateStruct("C:\\Users\\Manoel\\Documents\\GitHub\\Hauffman_Encoder\\ProjetC\\StaticTrees\\alphabetfrancais.txt"); //Fast encoding uses static tree
-            sortLinkedListWord(linkedListRoot->start);
-            FILE *readFilePtr;
-            char * input = argv[2];
-            char * output = argv[3];
-            openFile(input, &readFilePtr);
-            int characterAmmount = readFile(readFilePtr, linkedListRoot);
-            sortLinkedListWord(linkedListRoot->start);
-            char uniqueChars = getUniqueChars(*linkedListRoot);
-            HuffmanRoot * Huffmanroot = createHuffmanRoot();
-            createHuffmanTree(linkedListRoot, Huffmanroot);
-            CanonicalList canonicalList[EXT_ASCII];
-            getSymbolsDepth(Huffmanroot->Root, canonicalList);
-            assignCodes(canonicalList, uniqueChars, EXT_ASCII);
-            FILE *outputFile;
-            if ((outputFile = fopen(output, "wb")) == NULL) {
-                perror("couldn't open output file");
-                exit(EXIT_FAILURE);
-            }
-            writeHeader(canonicalList, uniqueChars,characterAmmount, outputFile);
-            encode(canonicalList,readFilePtr, outputFile);
-            fclose(readFilePtr);
+            staticCompression(argv[2],argv[3]);
 
         } else if(strcmp(argv[1], "-s") == 0 || strcmp(argv[1], "--slow") == 0){
-            linkedListRoot =  createDynammicRoot();
-            FILE *readFilePtr;
-            char * input = argv[2];
-            char * output = argv[3];
-            openFile(input, &readFilePtr);
-            int characterAmmount = readFile(readFilePtr, linkedListRoot);
-            sortLinkedListWord(linkedListRoot->start);
-            char uniqueChars = getUniqueChars(*linkedListRoot);
-            HuffmanRoot * Huffmanroot = createHuffmanRoot();
-            createHuffmanTree(linkedListRoot, Huffmanroot);
-            CanonicalList canonicalList[EXT_ASCII];
-            getSymbolsDepth(Huffmanroot->Root, canonicalList);
-            assignCodes(canonicalList, uniqueChars, EXT_ASCII);
-            FILE *outputFile;
-            if ((outputFile = fopen(output, "wb")) == NULL) {
-                perror("couldn't open output file");
-                exit(EXIT_FAILURE);
-            }
-            writeHeader(canonicalList, uniqueChars,characterAmmount, outputFile);
-            encode(canonicalList,readFilePtr, outputFile);
-            fclose(readFilePtr);
-
-
+            dynammicCompression(argv[2],argv[3]);
         } else if(strcmp(argv[1], "-d") == 0 || strcmp(argv[1], "--decompress") == 0){
-            char * inputPath = argv[2];
-            char * outputPath = argv[3];
-            FILE *input;
-            FILE *output;
-            openFile(inputPath, &input);
-            if ((output = fopen(outputPath, "wb")) == NULL) {
-                perror("couldn't open output file");
-                exit(EXIT_FAILURE);
-            }
-            unsigned char uniqueChars;
-            unsigned long characterAmmount;
-            CanonicalList *CanonicalList = readHeader(input, &uniqueChars, &characterAmmount);
-            assignCodes(CanonicalList, uniqueChars, uniqueChars);
-            decode(CanonicalList, characterAmmount, uniqueChars, input, output);
-
-
-
-        } else if(strcmp(argv[1], "-i") == 0 || strcmp(argv[1], "--interactive") == 0){
-            printf("Interactive mode\n");
-            displayInterface();
+            decompress(argv[2],argv[3]);
         }
     }
 }
@@ -203,6 +207,7 @@ char * displayInterface(){
             printf("Please enter the name of the output file : ");
             char * outputFileNameFast = (char*)malloc(sizeof(char)*MAX_WORD_LENGTH);
             scanf("%s", outputFileNameFast);
+            staticCompression(fileNameFast, outputFileNameFast);
             break;
         case 2:
             printf("Slow compression \n"
@@ -212,16 +217,17 @@ char * displayInterface(){
             printf("Please enter the name of the output file : ");
             char * outputFileNameSlow = (char*)malloc(sizeof(char)*MAX_WORD_LENGTH);
             scanf("%s", outputFileNameSlow);
+            dynammicCompression(fileNameSlow, outputFileNameSlow);
             break;
         case 3:
             printf("Decompress a file \n"
-                   "Please enter the name of the file you want to compress : ");
+                   "Please enter the name of the file you want to decompress : ");
             char * fileNameCompression = (char*)malloc(sizeof(char)*MAX_WORD_LENGTH);
             scanf("%s", fileNameCompression);
             printf("Please enter the name of the output file : ");
             char * outputFileNameCompression = (char*)malloc(sizeof(char)*MAX_WORD_LENGTH);
             scanf("%s", outputFileNameCompression);
-            printf("Please enter the name of the file containing the tree : ");
+            decompress(fileNameCompression, outputFileNameCompression);
             break;
         case 4:
             printf("Exit \n");

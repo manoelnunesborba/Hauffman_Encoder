@@ -10,6 +10,7 @@
 #include "word.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 LinkedListRoot * createDynammicRoot(){
     LinkedListRoot * root = malloc(sizeof(root));
@@ -97,14 +98,13 @@ LinkedListRoot * ReadFileAndGenerateStruct(const char *FileName){
         }else{
             readNExtChar =0;
         }
-        printf("%c", ch);
-
         // Checking if character is not EOF.
         // If it is EOF stop eading.
     } while (ch != EOF);
 
     // Closing the file
     fclose(ptr);
+    return root;
 }
 
 void addElement(LinkedListWord *list, char letter){
