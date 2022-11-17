@@ -74,14 +74,14 @@ unsigned long readFile(FILE * file, LinkedListRoot * linkedListRoot) {
 }
 void staticCompression(char * var_input, char * var_output){
 /*Juste ici, il faut changer car ca depend dans quel repertoire ton IDE torne*/
-    LinkedListRoot * linkedListRoot = ReadFileAndGenerateStruct("..\\ProjetC\\StaticTrees\\alphabetfrancais.txt"); //Fast encoding uses static tree
+    LinkedListRoot * linkedListRoot = ReadFileAndGenerateStruct("C:\\Users\\papaj\\Documents\\GitHub\\Hauffman_Encoder\\ProjetC\\StaticTrees\\alphabetfrancais.txt"); //Fast encoding uses static tree
     sortLinkedListWord(linkedListRoot->start);
+    linkedListRoot->start = linkedListRoot->start->next;
     FILE *readFilePtr;
     char * input = var_input;
     char * output = var_output;
     openFile(input, &readFilePtr);
     int characterAmmount = readFile(readFilePtr, linkedListRoot);
-    sortLinkedListWord(linkedListRoot->start);
     char uniqueChars = getUniqueChars(*linkedListRoot);
     HuffmanRoot * Huffmanroot = createHuffmanRoot();
     createHuffmanTree(linkedListRoot, Huffmanroot);
@@ -200,8 +200,7 @@ char * displayInterface(){
     scanf("%d", &choice);
     switch(choice){
         case 1:
-            printf("Fast compression \n"
-                   "Please enter the name of the file you want to compress : ");
+            printf("Fast compression \nPlease enter the name of the file you want to compress : ");
             char * fileNameFast = (char*)malloc(sizeof(char)*MAX_WORD_LENGTH);
             scanf("%s", fileNameFast);
             printf("Please enter the name of the output file : ");
@@ -210,8 +209,7 @@ char * displayInterface(){
             staticCompression(fileNameFast, outputFileNameFast);
             break;
         case 2:
-            printf("Slow compression \n"
-                   "Please enter the name of the file you want to compress : ");
+            printf("Slow compression \nPlease enter the name of the file you want to compress : ");
             char * fileNameSlow = (char*)malloc(sizeof(char)*MAX_WORD_LENGTH);
             scanf("%s", fileNameSlow);
             printf("Please enter the name of the output file : ");

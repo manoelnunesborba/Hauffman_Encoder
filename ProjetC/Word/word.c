@@ -22,7 +22,7 @@ LinkedListRoot * createDynammicRoot(){
     root->start = element;
     return root;
 }
-void addStatic(LinkedListWord *list, char letter, double frequence){
+void addStatic(LinkedListWord *list, char letter, int frequence){
     if(list->letter != letter){
         if(list->next == NULL && list->letter == NULL){
             list->frequency = frequence;
@@ -45,11 +45,6 @@ LinkedListRoot * createStaticRoot(){
     element->letter = NULL;
     element->frequency = 0.0;
     start->start = element;
-    double frequence[] = {8.13, 0.93, 3.15, 3.55, 15.10, 0.96, 0.97, 1.08, 6.94, 0.71, 0.16, 5.68, 3.23, 6.42, 5.27, 3.03, 0.89, 6.43, 7.91, 7.11,6.05, 1.83, 0.04, 0.42, 0.19, 0.21 };
-    for(char i = 97; i<= 122; i++){
-        addStatic(start->start, i, frequence[i-97]);
-    }
-    
     return start;
 }
 LinkedListRoot * ReadFileAndGenerateStruct(const char *FileName){
