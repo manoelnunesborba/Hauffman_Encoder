@@ -36,10 +36,10 @@ void initializeHuffmanTree(HuffmanRoot * huffmanRoot, LinkedListRoot * linkedLis
 void displayDocumentation();
 char * displayInterface();
 void commandReader(int argc, char *argv[]);
-
+unsigned long getCharAmmount(FILE *inputFile);
 void openFile(String path, FILE ** file);
 void closeFile(FILE ** file);
-unsigned long readFile(FILE * file, LinkedListRoot * linkedListRoot);
+void readFile(FILE * file, LinkedListRoot * linkedListRoot);
 
 
 
@@ -61,16 +61,19 @@ void closeFile(FILE ** file) {
     fclose(*file);
 }
 
-unsigned long readFile(FILE * file, LinkedListRoot * linkedListRoot) {
-    char * c = malloc(sizeof(char));
-    unsigned long size =0;
+unsigned long getCharAmmount(FILE *inputFile) {
+    fseek(inputFile, 0L, SEEK_END );
+    unsigned long bytesAmmount = ftell(inputFile);
+    rewind(inputFile);
+    return bytesAmmount;
+}
 
+void readFile(FILE * file, LinkedListRoot * linkedListRoot) {
+    char * c = malloc(sizeof(char));
     while((c = fgetc(file)) != EOF) {
         findLetterFrequency(linkedListRoot->start, &c);
-        size++;
     }
     sortLinkedListWord(linkedListRoot->start);
-    return size;
 }
 void staticCompression(char * var_input, char * var_output){
 /*Juste ici, il faut changer car ca depend dans quel repertoire ton IDE torne*/
@@ -81,7 +84,7 @@ void staticCompression(char * var_input, char * var_output){
     char * input = var_input;
     char * output = var_output;
     openFile(input, &readFilePtr);
-    int characterAmmount = readFile(readFilePtr, linkedListRoot);
+    unsigned long characterAmmount = getCharAmmount(readFilePtr);
     char uniqueChars = getUniqueChars(*linkedListRoot);
     HuffmanRoot * Huffmanroot = createHuffmanRoot();
     createHuffmanTree(linkedListRoot, Huffmanroot);
@@ -103,7 +106,8 @@ void dynammicCompression(char * var_input, char * var_output){
     char * input = var_input;
     char * output = var_output;
     openFile(input, &readFilePtr);
-    int characterAmmount = readFile(readFilePtr, linkedListRoot);
+    readFile(readFilePtr, linkedListRoot);
+    unsigned long characterAmmount = getCharAmmount(readFilePtr);
     sortLinkedListWord(linkedListRoot->start);
     char uniqueChars = getUniqueChars(*linkedListRoot);
     HuffmanRoot * Huffmanroot = createHuffmanRoot();
