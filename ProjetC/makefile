@@ -14,3 +14,7 @@ hufenc.o: ./Hufenc/hufenc.c ./Hufenc/hufenc.c
 	$(CC) $(CFLAGS) -c ./Hufenc/hufenc.c ./Hufenc/hufenc.c 
 clean:
 	@rm *.o ./Tree/*.gch ./Word/*.gch ./Hufenc/*.gch $(TARGET) 2>/dev/null || true
+test-slow:
+	./test.sh -s
+test-fast:
+	./test.sh -f -i ./samples/miserable-short.txt
