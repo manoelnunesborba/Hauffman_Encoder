@@ -74,7 +74,7 @@ unsigned long readFile(FILE * file, LinkedListRoot * linkedListRoot) {
 }
 void staticCompression(char * var_input, char * var_output){
 /*Juste ici, il faut changer car ca depend dans quel repertoire ton IDE torne*/
-    LinkedListRoot * linkedListRoot = ReadFileAndGenerateStruct("C:\\Users\\papaj\\Documents\\GitHub\\Hauffman_Encoder\\ProjetC\\StaticTrees\\alphabetfrancais.txt"); //Fast encoding uses static tree
+    LinkedListRoot * linkedListRoot = ReadFileAndGenerateStruct("./StaticTrees/alphabetfrancais.txt"); //Fast encoding uses static tree
     sortLinkedListWord(linkedListRoot->start);
     linkedListRoot->start = linkedListRoot->start->next;
     FILE *readFilePtr;
