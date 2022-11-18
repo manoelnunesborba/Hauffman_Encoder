@@ -1,9 +1,3 @@
 .vscode
-main
-.gitignore
 .editorconfig
-output.bin
-output.txt
-header.bin
-huffman
 hcode
