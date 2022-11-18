@@ -1,3 +1,6 @@
+/.vscode
+/.editorconfig
+/hcode
 /.bash_history
 /.bash_logout
 /.bashrc
@@ -8,7 +11,11 @@
 /.sudo_as_admin_successful
 /.vscode
 /.vscode-server
-/main
+/*.txt
+/*.bin
+/*.huffman
 /.idea
 /CMakeLists.txt
 cmake-build-debug
+/*.o
+*.gch
