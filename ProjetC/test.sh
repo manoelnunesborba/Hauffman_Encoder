@@ -63,7 +63,7 @@ printf "Compressed size: ${BLUE} ${compressed_size}B ${NC}\n"
 
 cmp --silent $test_file $decompressed_file \
 && printf "${GREEN}### PASSED: Decompressed file identical to source! ###\n${NC}" \
-|| printf "${RED}### FAILED: Decompressed file different from source! ###\n${NC}" && declare -i exit_code=1
+|| (printf "${RED}### FAILED: Decompressed file different from source! ###\n${NC}" && declare -i exit_code=1)
 
 if [[ $keep_file == 'yes' ]]; then
     exit $exit_code
