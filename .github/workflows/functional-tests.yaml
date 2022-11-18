@@ -1,0 +1,23 @@
+name: functional tests
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: adding required pkg
+      run: sudo apt-get update && sudo apt-get install gcc make
+    - name: build binary
+      run: make
+    - name: functional test of the slow compression
+      run: make test-slow
+    # uncomment when fast compression is working
+    # - name: functional test of the fast compression
+    #   run: make test-fast
