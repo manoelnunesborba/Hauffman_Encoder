@@ -49,7 +49,7 @@ LinkedListRoot * createStaticRoot(){
 }
 LinkedListRoot * ReadFileAndGenerateStruct(const char *FileName){
     FILE* ptr;
-    char ch;
+    int ch;
     LinkedListRoot *root = createStaticRoot();
     // Opening file in reading mode
     ptr = fopen(FileName, "r");
@@ -60,8 +60,7 @@ LinkedListRoot * ReadFileAndGenerateStruct(const char *FileName){
     int readNExtChar=1;
     int readNExtFrequency=0;
     char lettres[83];
-    do {
-        ch = fgetc(ptr);
+    while ((ch = fgetc(ptr)) != EOF) {
 
         if(readNExtChar == 1 ){
             //add char
@@ -95,7 +94,7 @@ LinkedListRoot * ReadFileAndGenerateStruct(const char *FileName){
         }
         // Checking if character is not EOF.
         // If it is EOF stop eading.
-    } while (ch != EOF);
+    }
 
     // Closing the file
     fclose(ptr);
