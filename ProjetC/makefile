@@ -13,4 +13,4 @@ huffman.o: ./Tree/huffman.c ./Tree/huffman.h
 hufenc.o: ./Hufenc/hufenc.c ./Hufenc/hufenc.c
 	$(CC) $(CFLAGS) -c ./Hufenc/hufenc.c ./Hufenc/hufenc.c 
 clean:
-	rm *.o ./Tree/*.gch ./Word/*.gch ./Hufenc/*.gch $(TARGET)
+	@rm *.o ./Tree/*.gch ./Word/*.gch ./Hufenc/*.gch $(TARGET) 2>/dev/null || true
