@@ -5,30 +5,28 @@
 * @version 1.0
 * @since   2022-09-11
 */
-
-#include "../Tree/huffman.h"
-#include "../Word/word.h"
-#include "./hufenc.h"
-#include <stdio.h>
+#include <errno.h>
 #include <stdlib.h>
 
-unsigned char getUniqueChars(LinkedListRoot list) {
+#include "./huffman_enc.h"
+
+unsigned char getUniqueChars(FrequencyListRoot list) {
    unsigned char uniqueCharsAmmount = 1;
-    LinkedListWord *currentNode = list.start;
-    while (currentNode->next != NULL) {
+    FrequencyListNode *currentNode = list.Start;
+    while (currentNode->Next != NULL) {
         uniqueCharsAmmount++;
-        currentNode = currentNode->next;
+        currentNode = currentNode->Next;
     }
     return uniqueCharsAmmount;
 }
 
 
-int getSymbolsDepth(HuffmanLeaf *node, CanonicalList list[]) {
+void assignSymbolsDepth(HuffmanLeaf *node, CanonicalList list[]) {
     unsigned char currentDepth = 0;
     for (int i=0; i < EXT_ASCII; i++){
-        list[i].code = 0;
-        list[i].depth = 0;
-        list[i].symbol = i;
+        list[i].Code = 0;
+        list[i].Depth = 0;
+        list[i].Symbol = i;
     }
     for(;;) {
         while (node->Right != NULL)
@@ -36,7 +34,7 @@ int getSymbolsDepth(HuffmanLeaf *node, CanonicalList list[]) {
             node = node->Right;
             currentDepth++;
         }
-        list[node->Letter].depth = currentDepth;
+        list[node->Letter].Depth = currentDepth;
         while (node->Parent != NULL) {
             if (node->Parent->Left != node) {
                 node = node->Parent->Left;
@@ -50,16 +48,15 @@ int getSymbolsDepth(HuffmanLeaf *node, CanonicalList list[]) {
             break;
         }
     }
-    return 0;
 }
 
-int canonicalSort(const void *firstItem, const void *secondItem) {
-    if (((CanonicalList *)firstItem)->depth > ((CanonicalList*)secondItem)->depth){
+static int canonicalSort(const void *firstItem, const void *secondItem) {
+    if (((CanonicalList *)firstItem)->Depth > ((CanonicalList*)secondItem)->Depth){
         return 1;
-    } else if (((CanonicalList *)firstItem)->depth < (((CanonicalList*)secondItem))->depth) {
+    } else if (((CanonicalList *)firstItem)->Depth < (((CanonicalList*)secondItem))->Depth) {
         return -1;
     } else {
-        if (((CanonicalList *)firstItem)->symbol > (((CanonicalList*)secondItem))->symbol) {
+        if (((CanonicalList *)firstItem)->Symbol > (((CanonicalList*)secondItem))->Symbol) {
             return 1;
         } else {
             return -1;
@@ -67,73 +64,87 @@ int canonicalSort(const void *firstItem, const void *secondItem) {
     }
     return 0;
 }
-int sortBySymbol(const void *firstItem, const void *secondItem) {
-    if (((CanonicalList *)firstItem)->symbol > (((CanonicalList*)secondItem))->symbol){
+static int sortBySymbol(const void *firstItem, const void *secondItem) {
+    if (((CanonicalList *)firstItem)->Symbol > (((CanonicalList*)secondItem))->Symbol){
         return 1;
     }
     return -1;
 }
 
 
-int assignCodes(CanonicalList *list, int uniqueChars, int size) {
+void assignCodes(CanonicalList *list, int uniqueChars, int size) {
     qsort(list, size, sizeof(CanonicalList), canonicalSort);
-    int depth = list->depth;
+    int depth = list->Depth;
     unsigned long long code = 0;
     int firstOccurence = 0;
     for (int i = size-uniqueChars; i < size; i++) {
-        if (list[i].depth == 0) {
+        if (list[i].Depth == 0) {
             break;
         }
         if (!firstOccurence) {
-            list[i].code = code;
+            list[i].Code = code;
             firstOccurence = 1;
-            depth = list[i].depth;
+            depth = list[i].Depth;
             continue;
         }
         code ++;
-        if (list[i].depth > depth) {
+        if (list[i].Depth > depth) {
             code = code << 1;
-            depth = list[i].depth;
+            depth = list[i].Depth;
         }
-        list[i].code = code;
+        list[i].Code = code;
+    }
+}
+int writeHeader(CanonicalList *list, unsigned char uniqueChars, unsigned long characterAmmounts, FILE *outputStream) {
+    if (NULL == outputStream) {
+        errno = ENOENT;
+        return -1;
+    }
+    fwrite(&characterAmmounts, sizeof(unsigned long), 1, outputStream);
+    fputc(uniqueChars, outputStream);
+    for(int i = EXT_ASCII - uniqueChars; i < EXT_ASCII; i++) {
+        fputc(list[i].Depth, outputStream);
+    }
+    for(int i = EXT_ASCII - uniqueChars; i < EXT_ASCII; i++) {
+        fputc(list[i].Symbol, outputStream);
     }
     return 0;
 }
-int writeHeader(CanonicalList *list, unsigned char uniqueChars, unsigned long characterAmmounts, FILE *output) {
-    fwrite(&characterAmmounts, sizeof(unsigned long), 1, output);
-    fputc(uniqueChars, output);
-    for(int i = EXT_ASCII - uniqueChars; i < EXT_ASCII; i++) {
-        fputc(list[i].depth, output);
+
+CanonicalList* readHeader(FILE *inputStream, unsigned char *uniqueChars, unsigned long *characterAmmount) {
+    if (NULL == inputStream) {
+        errno = ENOENT;
+        exit(1);
     }
-    for(int i = EXT_ASCII - uniqueChars; i < EXT_ASCII; i++) {
-        fputc(list[i].symbol, output);
-    }
-    return 0;
-}
-CanonicalList* readHeader(FILE *input, unsigned char *uniqueChars, unsigned long *characterAmmount) {
-    fread(characterAmmount, sizeof(unsigned long), 1, input);
-    *uniqueChars = fgetc(input);
+    fread(characterAmmount, sizeof(unsigned long), 1, inputStream);
+    *uniqueChars = fgetc(inputStream);
     CanonicalList *canonicalList = (CanonicalList*)malloc( *uniqueChars * sizeof(CanonicalList));
     for (int i = 0; i < *uniqueChars; i++) {
-        canonicalList[i].depth = fgetc(input);
+        canonicalList[i].Depth = fgetc(inputStream);
     }
     for (int i = 0; i < *uniqueChars; i++) {
-        canonicalList[i].symbol = fgetc(input);
+        canonicalList[i].Symbol = fgetc(inputStream);
     }
     return canonicalList;
 }
-int encode(CanonicalList *list, FILE *input, FILE *output) {
+
+int encode(CanonicalList *list, FILE *inputStream, FILE *outputStream) {
+
+    if ((NULL == inputStream) || (NULL == outputStream)) {
+        errno = ENOENT;
+        return -1;
+    }
     qsort(list, EXT_ASCII, sizeof(CanonicalList), sortBySymbol);
     int character, bitCount = 0;
     unsigned char leftover = 0;
     unsigned char buffer = 0;
-    rewind(input);
-    while ((character =  fgetc(input)) != EOF ) {
-        int depth = list[character].depth;
-        BigInt code = list[character].code;
+    rewind(inputStream);
+    while ((character =  fgetc(inputStream)) != EOF ) {
+        int depth = list[character].Depth;
+        BigInt code = list[character].Code;
         for(int bit = depth - 1; bit >= 0; bit--){
             if (bitCount == 8) {
-                fputc(buffer, output);
+                fputc(buffer, outputStream);
                 buffer = 0;
                 bitCount = 0;
             }
@@ -147,21 +158,24 @@ int encode(CanonicalList *list, FILE *input, FILE *output) {
     if (bitCount != 0) {
         leftover = 8 - bitCount;
         buffer = buffer << leftover;
-        fputc(buffer, output);
+        fputc(buffer, outputStream);
     }
-    fclose(output);
     return 0;
 }
 
-int decode(CanonicalList *list, unsigned long characterAmmount, int uniqueChars, FILE *input, FILE *output){
+int decode(CanonicalList *list, unsigned long characterAmmount, int uniqueChars, FILE *inputStream, FILE *outputStream){
+    if ((NULL == inputStream) || (NULL == outputStream)) {
+        errno = ENOENT;
+        return -1;
+    }
     qsort(list, uniqueChars, sizeof(CanonicalList), canonicalSort);
     int searchIndex[uniqueChars];
     for (int i = 0; i < uniqueChars; i++) {
         searchIndex[i] = uniqueChars;
     }
     for (int i = 0; i < uniqueChars; i++) {
-        if (searchIndex[list[i].depth] > i ) {
-            searchIndex[list[i].depth] = i;
+        if (searchIndex[list[i].Depth] > i ) {
+            searchIndex[list[i].Depth] = i;
         }
     }
     unsigned char buffer;
@@ -173,7 +187,7 @@ int decode(CanonicalList *list, unsigned long characterAmmount, int uniqueChars,
         int nextChar = 0;
         while (!nextChar) {
             if (flushBuffer) {
-                buffer = fgetc(input);
+                buffer = fgetc(inputStream);
                 startingBit = 7;
             }
             for(int bit = startingBit; bit >= 0; bit--){
@@ -186,11 +200,11 @@ int decode(CanonicalList *list, unsigned long characterAmmount, int uniqueChars,
                 int currentIndex;
                 for(;;){
                     currentIndex = searchIndex[length] + offset;
-                    if (list[currentIndex].depth > length || currentIndex  == uniqueChars) {
+                    if (list[currentIndex].Depth > length || currentIndex  == uniqueChars) {
                         break;
                     }
-                    if (code == list[currentIndex].code) {
-                        fputc(list[currentIndex].symbol, output);
+                    if (code == list[currentIndex].Code) {
+                        fputc(list[currentIndex].Symbol, outputStream);
                         length = 0;
                         code = 0;
                         nextChar = 1;
@@ -211,4 +225,5 @@ int decode(CanonicalList *list, unsigned long characterAmmount, int uniqueChars,
             }
         }
     }
+    return 0;
 }
