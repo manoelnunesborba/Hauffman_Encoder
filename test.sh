@@ -3,14 +3,14 @@ _help() {
    echo
    echo "functional test of hcode"
    echo
-   echo "Syntax: test [-h|s|f|k|i]"
+   echo "Syntax: test [-h|s|f|k|i|t]"
    echo "options:"
    echo "-h     Print this Help."
    echo "-s     test the slow compression"
    echo "-f     test the fast compression"
    echo "-i     provide an input file, defaults to the bible"
    echo "-k     keep files after execution"
-   echo "-t     target compression percentage to pass, defaults to 10"
+   echo "-t     target compression percentage to pass, accepts 2 decimals, defaults to 10"
    echo
 }
 _cleanup() {
@@ -34,7 +34,7 @@ NC='\033[0m' # no color
 test_file="./samples/bible.txt"
 compression_target=10
 
-while getopts ":hsfki:" option; do
+while getopts ":hsfkt:i:" option; do
     case $option in
         h)
             _help
