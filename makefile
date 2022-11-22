@@ -2,18 +2,18 @@ CC = gcc
 CFLAGS  = -g
 TARGET = hcode
 
-all: main.o huffman.o word.o hufenc.o
-	$(CC) $(CFLAGS) -o $(TARGET) main.o huffman.o word.o hufenc.o
-main.o: main.c
-	$(CC) $(CFLAGS) -c main.c
-word.o: ./Word/word.c ./Word/word.h
-	$(CC) $(CFLAGS) -c ./Word/word.c ./Word/word.h
-huffman.o: ./Tree/huffman.c ./Tree/huffman.h
-	$(CC) $(CFLAGS) -c ./Tree/huffman.c ./Tree/huffman.h 
-hufenc.o: ./Hufenc/hufenc.c ./Hufenc/hufenc.c
-	$(CC) $(CFLAGS) -c ./Hufenc/hufenc.c ./Hufenc/hufenc.c 
+all: main.o huffman_tree.o frequency.o huffman_enc.o
+	$(CC) $(CFLAGS) -o $(TARGET) main.o huffman_tree.o frequency.o huffman_enc.o
+main.o: src/main.c
+	$(CC) $(CFLAGS) -c src/main.c
+frequency.o: src/frequency/frequency.c src/frequency/frequency.h
+	$(CC) $(CFLAGS) -c src/frequency/frequency.c src/frequency/frequency.h
+huffman_tree.o: src/huffman_tree/huffman_tree.c src/huffman_tree/huffman_tree.h
+	$(CC) $(CFLAGS) -c src/huffman_tree/huffman_tree.c src/huffman_tree/huffman_tree.h 
+huffman_enc.o: src/huffman_enc/huffman_enc.c src/huffman_enc/huffman_enc.h
+	$(CC) $(CFLAGS) -c src/huffman_enc/huffman_enc.c src/huffman_enc/huffman_enc.h 
 clean:
-	@rm *.o ./Tree/*.gch ./Word/*.gch ./Hufenc/*.gch $(TARGET) 2>/dev/null || true
+	@rm *.o src/*/*.gch *.huffman *.txt *.bin *.huff* $(TARGET) 2>/dev/null || true
 test-slow:
 	./test.sh -s
 test-fast:
