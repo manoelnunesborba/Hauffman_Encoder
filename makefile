@@ -13,7 +13,7 @@ huffman_tree.o: src/huffman_tree/huffman_tree.c src/huffman_tree/huffman_tree.h
 huffman_enc.o: src/huffman_enc/huffman_enc.c src/huffman_enc/huffman_enc.h
 	$(CC) $(CFLAGS) -c src/huffman_enc/huffman_enc.c src/huffman_enc/huffman_enc.h 
 clean:
-	@rm *.o src/*/*.gch *.huffman *.txt $(TARGET) 2>/dev/null || true
+	@rm *.o src/*/*.gch *.huffman *.txt *.bin *.huff* $(TARGET) 2>/dev/null || true
 test-slow:
 	./test.sh -s
 test-fast:

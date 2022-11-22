@@ -27,7 +27,7 @@ FrequencyListRoot * createFrequencyList();
 static void incrementFrequency(FrequencyListNode * list, char symbol);
 static void addElement(FrequencyListNode * list, char symbol);
 static int alreadyAdded(FrequencyListNode * list, char symbol);
-void findSymbolFrequency(FrequencyListNode * list, char *symbol);
+void findSymbolFrequency(FrequencyListNode * list, int *symbol);
 int sortFrequencyList(FrequencyListNode * list);
 
 #endif

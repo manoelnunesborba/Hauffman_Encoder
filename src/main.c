@@ -37,22 +37,12 @@ unsigned long getCharAmmount(FILE *fileStream) {
     return bytesAmmount;
 }
 
-// void readFile(FILE *fileStream, FrequencyListRoot *frequencyList) {
-//     char *symbol = malloc(sizeof(char));
-//     while((symbol = fgetc(fileStream)) != EOF) {
-//         findSymbolFrequency(frequencyList->Start, &symbol);
-//     }
-//     free(symbol);
-//     sortFrequencyList(frequencyList->Start);
-// }
-
-
-void readFile(FILE * file, FrequencyListRoot * linkedListRoot) {
-    char * c = malloc(sizeof(char));
-    while((c = fgetc(file)) != EOF) {
-        findSymbolFrequency(linkedListRoot->Start, &c);
+void readFile(FILE *fileStream, FrequencyListRoot *frequencyList) {
+    char *symbol;
+    while((symbol = fgetc(fileStream)) != EOF) {
+        findSymbolFrequency(frequencyList->Start, &symbol);
     }
-    sortFrequencyList(linkedListRoot->Start);
+    sortFrequencyList(frequencyList->Start);
 }
 
 void staticCompression(char *inputFilePath, char *outputFilePath){
@@ -92,24 +82,15 @@ void staticCompression(char *inputFilePath, char *outputFilePath){
     fclose(outputFileStream);
 }
 
-void openFile(FilePath path, FILE ** file) {
-    *file = fopen(path, "rb");
-    if (*file == NULL) {
-        printf("Error opening file %s", path);
-        exit(1);
-    }
-    printf("File %s opened successfully", path);
-}
-
 void compress(char *inputFilePath, char *outputFilePath){
     FrequencyListRoot *frequencyList =  createFrequencyList();
     FILE *inputFileStream;
-    char *fp = inputFilePath;
-    openFile(fp, &inputFileStream);
-    // if ((inputFileStream = fopen("samples/bible.txt", "rb")) == NULL) {
-    //     errno=ENOENT;
-    //     exit(EXIT_FAILURE);
-    // }
+    // char *fp = inputFilePath;
+    // openFile(fp, &inputFileStream);
+    if ((inputFileStream = fopen(inputFilePath, "rb")) == NULL) {
+        errno=ENOENT;
+        exit(EXIT_FAILURE);
+    }
     unsigned long characterAmmount = getCharAmmount(inputFileStream);
     readFile(inputFileStream, frequencyList);
     // unsigned long characterAmmount = getCharAmmount(inputFileStream);
@@ -142,7 +123,7 @@ void compress(char *inputFilePath, char *outputFilePath){
 void decompress(char *inputFilePath, char *outputFilePath){
     FILE *inputFileStream;
     FILE *outputFileStream;
-    if ((inputFileStream = fopen(inputFileStream, "rb")) == NULL) {
+    if ((inputFileStream = fopen(inputFilePath, "rb")) == NULL) {
         errno=ENOENT;
         exit(EXIT_FAILURE);
     }

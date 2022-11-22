@@ -131,7 +131,7 @@ static int alreadyAdded(FrequencyListNode *node, char symbol){
     return alreadyAdded(node->Next, symbol);
 }
 
-void findSymbolFrequency(FrequencyListNode *node, char *symbol){
+void findSymbolFrequency(FrequencyListNode *node, int *symbol){
     for(int i = 0 ; symbol[i] != '\000' ; i++)
         incrementFrequency(node, symbol[i]);
 }
