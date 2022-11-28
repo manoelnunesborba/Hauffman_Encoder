@@ -66,7 +66,7 @@ fi
 compressed_file="compressed-tmp-$(uuidgen).huffenc"
 decompressed_file="decompressed-tmp-$(uuidgen).txt"
 trap _cleanup EXIT
-
+printf "Running test with sample ${BLUE} $test_file ${NC} ...\n"
 compression_speed="$(time ( TIMEFORMAT='%lU'; ./hcode $mode $test_file $compressed_file ) 2>&1 1>/dev/null )"
 printf "Compression speed: ${BLUE} $compression_speed ${NC}\n"
 
