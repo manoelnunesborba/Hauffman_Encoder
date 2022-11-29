@@ -15,6 +15,6 @@ huffman_enc.o: src/huffman_enc/huffman_enc.c src/huffman_enc/huffman_enc.h
 clean:
 	@rm *.o src/*/*.gch *.huffman *.txt *.bin *.huff* $(TARGET) 2>/dev/null || true
 test-slow:
-	./test.sh -s
+	./test.sh -s -t 40 && ./test.sh -s -i ./samples/E.coli -t 70 && ./test.sh -s -t 20 -i ./samples/world192.txt
 test-fast:
 	./test.sh -f -i ./samples/miserable-short.txt
